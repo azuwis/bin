@@ -1,0 +1,2 @@
+#!/bin/sh
+vim -c 'execute "Man" "'$1'" | only'
