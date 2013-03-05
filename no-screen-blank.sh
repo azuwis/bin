@@ -3,4 +3,4 @@
 export DISPLAY
 xset -dpms
 xset s noblank
-xset s of
+xset s off
