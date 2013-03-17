@@ -39,6 +39,10 @@ do
         echo -n "(widest)"
     fi
     echo
+    # use the widest one in the first 5 items if width >= 1920
+    if [ $index -lt 5 -a $max_width -ge 1920 ]; then
+        break
+    fi
     index=$((index+1))
 done
 DATE=`date +%Y%m%d%H%M%S`
