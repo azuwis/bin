@@ -18,7 +18,7 @@ max_width=0
 for url in `xmlstarlet sel --net -T -t -m 'rss/channel/item/media:content[@medium="document"]' -v @url -n $rss`
 do
     # work with the first 24 items
-    if [ $index -gt 24 ]; then
+    if [ $index -gt 16 ]; then
         break
     fi
     echo -n "downloading #$index item..."
