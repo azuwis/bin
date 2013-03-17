@@ -21,13 +21,12 @@ do
     if [ $index -gt 16 ]; then
         break
     fi
-    echo -n "downloading #$index item..."
-    curl -sL $url >${index}.jpg
+    curl -#L $url >${index}.jpg
     width=`feh -L %w ${index}.jpg 2>/dev/null`
     if [ x"$width" = x"" ]; then
         width=0
     fi
-    echo -n "width $width"
+    echo -n "NO. $index item width: $width"
     # if width > 1920, use it
     if [ $width -gt 1920 ]; then
         max_index=$index
