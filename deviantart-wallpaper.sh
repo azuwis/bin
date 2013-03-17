@@ -3,8 +3,6 @@
 # author: Zhong Jianxin (azuwis)
 # dep: xmlstarlet curl feh
 
-set -e
-
 if [ x"$1" == x"prev" ]; then
     feh --bg-fill ~/.wallpaper/previous
     exit 0
@@ -13,7 +11,7 @@ fi
 # Popular Abstract in the last 1 day http://browse.deviantart.com/customization/wallpaper/abstract/
 rss='http://backend.deviantart.com/rss.xml?q=boost%3Apopular+in%3Acustomization%2Fwallpaper%2Fabstract+max_age%3A24h&type=deviation'
 mkdir -p ~/.wallpaper/archive
-cd ~/.wallpaper
+cd ~/.wallpaper || exit
 index=0
 max_index=0
 max_width=0
