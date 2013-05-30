@@ -1,0 +1,6 @@
+#!/bin/bash
+HOST=$1
+export AUTOSSH_POLL=60
+#export AUTOSSH_LOGFILE=$HOME/.autossh/$HOST.log
+#export AUTOSSH_DEBUG=yes
+autossh -f -M20000 -N -D7070 $HOST
