@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# user@server:/path/to/cm
+PRIV_CM_SRV=CHANGEME
+
+CM_SRC=$PRIV_CM_SRV
+
+if [ x"$1" == x ]; then
+    DEVICE=maguro
+else
+    DEVICE=$1
+fi
+
+mkdir -p ~/android/$DEVICE
+cd ~/android/$DEVICE
+
+CM_SRC_A=(${CM_SRC//:/ })
+PREV_CM=`ls cm-*.zip | tail -1`
+NOW_CM=`ssh ${CM_SRC_A[0]} "cd ${CM_SRC_A[1]}/out/target/product/$DEVICE/; ls cm-*.zip | tail -1"`
+
+if [ x"$NOW_CM" == x ]; then
+    echo "Built Rom not found."
+    exit 1
+fi
+
+if [ x"$PREV_CM" != x ]; then
+    cp $PREV_CM $NOW_CM
+fi
+rsync -Pve ssh $CM_SRC/out/target/product/$DEVICE/$NOW_CM .
+adb wait-for-device
+adb root
+adb wait-for-device
+adb remount
+adb push $NOW_CM /sdcard/goomanager/
+adb shell 'echo "set tw_signed_zip_verify 0
+install /storage/emulated/0/goomanager/'$NOW_CM'" > /cache/recovery/openrecoveryscript'
+#adb shell 'echo "install /storage/emulated/0/goomanager/fancy_kernel-tuna-4.2-r35-std.zip" >> /cache/recovery/openrecoveryscript'
+adb reboot recovery
