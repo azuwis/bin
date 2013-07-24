@@ -9,6 +9,7 @@ if [ x"$1" == x ]; then
     DEVICE=maguro
 else
     DEVICE=$1
+    shift
 fi
 
 mkdir -p ~/android/$DEVICE
@@ -34,5 +35,8 @@ adb remount
 adb push $NOW_CM /sdcard/goomanager/
 adb shell 'echo "set tw_signed_zip_verify 0
 install /storage/emulated/0/goomanager/'$NOW_CM'" > /cache/recovery/openrecoveryscript'
-#adb shell 'echo "install /storage/emulated/0/goomanager/fancy_kernel-tuna-4.2-r35-std.zip" >> /cache/recovery/openrecoveryscript'
+for i in "$@"
+do
+    adb shell 'echo "install /storage/emulated/0/goomanager/'$i'" >> /cache/recovery/openrecoveryscript'
+done
 adb reboot recovery
