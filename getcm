@@ -30,6 +30,7 @@ fi
 rsync -Pve ssh $CM_SRC/out/target/product/$DEVICE/$NOW_CM .
 adb wait-for-device
 adb root
+sleep 3
 adb wait-for-device
 adb remount
 adb push $NOW_CM /sdcard/goomanager/
