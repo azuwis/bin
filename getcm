@@ -6,7 +6,7 @@ PRIV_CM_SRV=CHANGEME
 CM_SRC=$PRIV_CM_SRV
 
 if [ x"$1" == x ]; then
-    DEVICE=maguro
+    DEVICE=mako
 else
     DEVICE=$1
     shift
@@ -18,6 +18,9 @@ cd ~/android/$DEVICE
 CM_SRC_A=(${CM_SRC//:/ })
 PREV_CM=`ls cm-*.zip | tail -1`
 NOW_CM=`ssh ${CM_SRC_A[0]} "cd ${CM_SRC_A[1]}/out/target/product/$DEVICE/; ls cm-*.zip | tail -1"`
+
+OLD_CM=`ls cm-*.zip | grep -Fxv $PREV_CM`
+rm $OLD_CM
 
 if [ x"$NOW_CM" == x ]; then
     echo "Built Rom not found."
