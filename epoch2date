@@ -1,0 +1,2 @@
+#!/bin/bash
+perl -ne 'if (/(\d{10})/){ my $epoch= $1; $date=scalar(localtime($epoch)); s/$epoch/$date/g; print; } else { print; }'
