@@ -74,6 +74,8 @@ def mainloop(stdscr):
         elif c == KEY_ENTER or c == KEY_U:
             subprocess.call(['udevil', UMOUNT_CMD,
                 os.path.join(MOUNT_PATH, devices[selection_index])])
+            if devices[selection_index] == 'Kindle':
+                subprocess.call(['eject', '/dev/disk/by-label/Kindle'])
 
 if __name__ == "__main__":
     curses.wrapper(mainloop)
