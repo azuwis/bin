@@ -1,0 +1,4 @@
+#!/bin/bash
+aptitude --disable-columns --display-format "%p - %d" search '!~M ~ainstall' >> ~/.instpkg/usefull-pkg
+sudo aptitude forget-new
+sudo aptitude keep-all
