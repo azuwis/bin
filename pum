@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+# a Curses Unmounter
+#
+#Copyright 2012 Wesley Werner
+
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import os
+import curses
+import subprocess
+
+# where things get auto mounted
+MOUNT_PATH = '/media'
+# exclude these guys from the list
+EXCLUDES = ('.hal-mtab', '.hal-mtab-lock', 'cdrom0', 'cdrom1')
+# the unmount command
+UMOUNT_CMD = 'umount'
+# key codes for menu actions
+# you may replace navigation with curses.KEY_UP and friends
+KEY_UP = ord('k')
+KEY_DOWN = ord('j')
+KEY_U = ord('u')
+KEY_QUIT = ord('q')
+KEY_ESCAPE = 27
+KEY_ENTER = 10
+
+def getDevices():
+    dirs = os.listdir(MOUNT_PATH)
+    return [dirname for dirname in dirs 
+            if dirname not in EXCLUDES]
+
+def drawScreen(stdscr, devices, selection_index):
+    stdscr.clear()
+    stdscr.addstr(0, 0, 'j/k - [u]mount - [q]uit', curses.A_BOLD)
+    for idx in range(len(devices)):
+        attrib = 0
+        if idx == selection_index:
+            attrib = curses.A_REVERSE
+        stdscr.addstr(idx + 1, 1, devices[idx], attrib)
+    stdscr.move(selection_index + 1, 0)
+    stdscr.refresh()
+
+def mainloop(stdscr):
+    # default to first item
+    selection_index = 0
+    # this gives us realtime updating
+    curses.halfdelay(10)
+    while True:
+        devices = getDevices()
+        # limit the selection to sane boundaries
+        if selection_index == len(devices):
+            selection_index = 0
+        if selection_index < 0: 
+            selection_index = len(devices) - 1
+        drawScreen(stdscr, devices, selection_index)
+        c = stdscr.getch()
+        if c == KEY_QUIT or c == KEY_ESCAPE: 
+            break
+        elif c == KEY_UP:
+            selection_index -= 1
+        elif c == KEY_DOWN:
+            selection_index += 1
+        elif c == KEY_ENTER or c == KEY_U:
+            subprocess.call([UMOUNT_CMD,
+                os.path.join(MOUNT_PATH, devices[selection_index])])
+
+if __name__ == "__main__":
+    curses.wrapper(mainloop)
