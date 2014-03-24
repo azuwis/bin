@@ -72,7 +72,7 @@ def mainloop(stdscr):
         elif c == KEY_DOWN:
             selection_index += 1
         elif c == KEY_ENTER or c == KEY_U:
-            subprocess.call([UMOUNT_CMD,
+            subprocess.call(['udevil', UMOUNT_CMD,
                 os.path.join(MOUNT_PATH, devices[selection_index])])
 
 if __name__ == "__main__":
