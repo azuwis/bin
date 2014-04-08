@@ -1,0 +1,2 @@
+#!/bin/sh
+test $(stat -c%s ~/.xsession-errors) -gt 1 && echo > ~/.xsession-errors
