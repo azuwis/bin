@@ -6,11 +6,13 @@ denoise() {
     mkdir -p $base
     if [ ! -e $base/noise.wav ]; then
         ffmpeg -i $mkv -vn -y $base/noise.wav
-        normalize-audio $base/noise.wav
+        if echo $mkv | grep -q -v nosound; then
+            normalize-audio $base/noise.wav
+        fi
     fi
     if [ ! -e $base/clean.wav ]; then
         sox $base/noise.wav -n noiseprof $base/noise.prof
-        sox $base/noise.wav $base/clean.wav noisered $base/noise.prof 0.11
+        sox $base/noise.wav $base/clean.wav noisered $base/noise.prof 0.05
     fi
     if [ ! -e $base/tmp.ts ]; then
         ffmpeg -i $mkv -i $base/clean.wav -c:v copy -bsf h264_mp4toannexb -c:a aac -strict experimental -map 0:0 -map 1:0 -y $base/tmp.ts
