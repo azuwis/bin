@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+count=${1:-50}
+cd /dev/shm
+rm -f vim.log
+xterm -title 'Floating: Vim benchmark' -g 80x24 -e bash -c "for i in {1..$count}; do vim --startuptime vim.log +qall; done"
+awk '/editing/ { sum+=$1; n++} END {print sum / n}' vim.log
+rm vim.log
