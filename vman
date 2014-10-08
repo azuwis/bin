@@ -1,2 +1,2 @@
 #!/bin/sh
-vim -c 'execute "Man" "'$1'" | only'
+vim -c 'runtime ftplugin/man.vim | execute "Man" "'$1'" | only'
