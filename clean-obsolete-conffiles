@@ -1,0 +1,42 @@
+#!/bin/sh
+set -e
+
+conffiles=$(dpkg-query -W -f='${Conffiles}\n' | awk '$NF=="obsolete"{print$1}')
+
+all_conffiles=""
+all_pkgs=""
+
+for conffile in $conffiles
+do
+  pkg=$(dpkg -S "$conffile" | awk -F: '{print $1}')
+  if [ x"$1" = x"-a" ]; then
+    all_conffiles="$all_conffiles $conffile"
+    all_pkgs="$all_pkgs $pkg"
+  else
+    echo "Package: $pkg"
+    echo "Conffile: $conffile"
+    echo -n "Remove conffile and reinstall package?[Yn]"
+    read tmp
+    if [ x"$tmp" != x"n" ]; then
+      all_conffiles="$all_conffiles $conffile"
+      all_pkgs="$all_pkgs $pkg"
+    fi
+    echo ""
+  fi
+done
+
+echo "All packages: $all_pkgs"
+echo "All conffiles: $all_conffiles"
+echo ""
+
+echo "Commands to run:"
+echo "sudo rm -f $all_conffiles"
+echo "sudo apt-get --reinstall install $all_pkgs"
+
+echo ""
+echo -n "Process?[Yn]"
+read tmp
+if [ x"$tmp" != x"n" ]; then
+  sudo rm -f $all_conffiles
+  sudo apt-get --reinstall install $all_pkgs
+fi
