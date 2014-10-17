@@ -2,7 +2,11 @@
 set -e
 count=${1:-50}
 cd /dev/shm
-rm -f vim.log
-xterm -title 'Floating: Vim benchmark' -g 80x24 -e bash -c "for i in {1..$count}; do vim --startuptime vim.log +qall; done"
+rm -f vim.log vim.finish
+x-terminal-emulator -T 'Floating: Vim benchmark' --geometry=80x24 -e "bash -c 'for i in {1..$count}; do vim --startuptime vim.log +qall; done; touch vim.finish'"
+while test ! -e vim.finish
+do
+  sleep 1
+done
 awk '/editing/ { sum+=$1; n++} END {print sum / n}' vim.log
-rm vim.log
+rm vim.log vim.finish
