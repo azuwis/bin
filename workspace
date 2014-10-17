@@ -1,0 +1,57 @@
+#!/bin/bash
+
+web () {
+  url=$1
+  shift
+
+  # run cmds in tmux
+  first_cmd=$1
+  shift
+  tmux new-session -d "$first_cmd"
+  for cmd in "$@"; do
+    tmux new-window "$cmd"
+  done
+
+  # start firefox
+  i3-msg split h
+  firefox -no-remote -P dev "$url" >&/dev/null &
+
+  # move/resize firefox
+  sleep 2
+  i3-msg resize grow width 10 px or 10 ppt
+
+  # vim
+  i3-msg focus left
+  i3-msg split v
+  gvim . &
+  sleep 1
+  i3-msg resize grow height 10 px or 30 ppt
+
+  tmux attach-session
+}
+
+_guard () {
+  web . guard
+}
+
+_nanoc () {
+  web http://localhost:3000 "nanoc view" guard
+}
+
+_awestruct () {
+  web http://localhost:4242 "awestruct -d --livereload"
+}
+
+_test () {
+  web . "echo lala; sleep 10" "echo asdf; sleep 10"
+}
+
+action=$1
+test -z "$action" && action="guard"
+
+if [ x"$(type -t "_$action")" == x"function" ]; then
+  shift
+  "_${action}" "$@"
+else
+  usage
+fi
