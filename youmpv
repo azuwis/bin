@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# author: Zhong Jianxin
+# deps: tmux mpv you-get ~/.mpv/lua/autoload.lua
+
+set -e
+
+TERM_RUN="x-terminal-emulator -T Floating:You-mpv -e "
+
+url_to_ascii () {
+  echo -n "you-mpv-"
+  echo "$1" | base64 -w 0 | tr '+' '-' | tr '/' '_' | tr -d '='
+}
+
+url=$1
+ascii_url=$(url_to_ascii "$url")
+
+mkdir -p "/tmp/${ascii_url}"
+cd "/tmp/${ascii_url}"
+
+tmux new-session -d -s "$ascii_url" -n You-mpv "you-get '$url'" || true
+
+tmux split-window -t "${ascii_url}:1.0" '
+file=""
+while :; do
+  file=$(ls -1 | head -1)
+  test -n "$file" && break
+  sleep 0.5
+done
+if echo "$file" | grep -qF "[00]."; then
+  next=$(echo "$file" | sed -e "s/\.download//" -e "s/\[00\]\./[01]./")
+  touch "$next"
+fi
+mpv --keep-open --cache=no *
+current_dir=$(pwd)
+echo "Press Enter to remove ${current_dir}, Ctrl+C to cancle."
+read tmp
+rm *.flv *.flv.download
+rmdir "${current_dir}"
+'
+
+$TERM_RUN tmux attach -d -t "$ascii_url"
