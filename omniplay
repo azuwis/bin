@@ -18,7 +18,7 @@ ascii_url=$(url_to_ascii "$url")
 mkdir -p "/tmp/${ascii_url}"
 cd "/tmp/${ascii_url}"
 
-tmux new-session -d -s "$ascii_url" -n You-mpv "you-get '$url'" || true
+tmux new-session -d -s "$ascii_url" -n You-mpv "you-get --no-merge '$url'" || true
 
 tmux split-window -t "${ascii_url}:1.0" '
 file=""
