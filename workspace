@@ -12,22 +12,17 @@ web () {
     tmux new-window "$cmd"
   done
 
+  # i3 layout
+  i3-msg 'workspace 6; append_layout .i3/webdev.json'
+
   # start firefox
-  i3-msg split h
   firefox -no-remote -P dev "$url" >&/dev/null &
 
-  # move/resize firefox
-  sleep 2
-  i3-msg resize grow width 10 px or 10 ppt
-
   # vim
-  i3-msg focus left
-  i3-msg split v
   gvim . &
-  sleep 1
-  i3-msg resize grow height 10 px or 30 ppt
 
-  tmux attach-session
+  # terminal
+  x-terminal-emulator -e tmux attach-session
 }
 
 guard () {
