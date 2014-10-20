@@ -2,16 +2,22 @@
 
 require 'fileutils'
 
-videos = Dir.glob('*.{mp4,mkv}')
+videos = ARGV.select do |file|
+  file =~ /\.(mp4|mkv)$/
+end
+if videos.size == 0
+  videos = Dir.glob('*.{mp4,mkv}')
+end
 
-if ARGV.size > 0
-  subtitles = ARGV
-else
-  subtitles = Dir.glob('*.{srt,ass,ssa}')
+subtitles = ARGV.select do |file|
+  file =~ /\.(ass|srt|ssa)$/
+end
+if subtitles.size == 0
+  subtitles = Dir.glob('*.{ass,srt,ssa}')
 end
 
 subtitles.each do |subtitle|
-  if subtitle =~ /[^\d](?<episode>\d{2})[^\d]/
+  if subtitle =~ /(s\d+)?[^\d](?<episode>\d{2})[^\d]/i
     episode = $~[:episode]
     matched_videos = videos.select do |video|
       video =~ Regexp.new("[^\d]#{episode}[^\d]")
@@ -22,7 +28,7 @@ subtitles.each do |subtitle|
       basename = File.basename(matched_video, '.*')
       subtitle_ext = File.extname(subtitle)
       wanted_subtitle = File.join(dirname, basename) + subtitle_ext
-      FileUtils.cp(subtitle, wanted_subtitle)
+      FileUtils.mv(subtitle, wanted_subtitle)
     end
   end
 end
