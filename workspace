@@ -30,24 +30,34 @@ web () {
   tmux attach-session
 }
 
-_guard () {
+guard () {
   web . guard
 }
 
-_nanoc () {
+nanoc () {
   web http://localhost:3000 "nanoc view" guard
 }
 
-_awestruct () {
+awestruct () {
   web http://localhost:4242 "awestruct -d --livereload"
 }
 
 action=$1
 test -z "$action" && action="guard"
 
-if [ x"$(type -t "_$action")" == x"function" ]; then
+usage () {
+  echo "USAGE: $(basename "$0") subcommand"
+  echo
+  echo "SUBCOMMANDS:"
+  for cmd in $(compgen -A function | grep -v '^_')
+  do
+    echo "  $cmd"
+  done
+}
+
+if [ x"$(type -t "$action")" == x"function" ]; then
   shift
-  "_${action}" "$@"
+  "${action}" "$@"
 else
   usage
 fi
