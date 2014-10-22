@@ -3,7 +3,7 @@ set -e
 count=${1:-50}
 cd /dev/shm
 rm -f vim.log
-tmux new-session -d -s benchmard-vim "bash -c 'for i in {1..$count}; do vim --startuptime vim.log +qall; done'; tmux wait-for -S benchmark-vim"
-tmux wait-for benchmark-vim
+tmux -L benchmark-vim new-session -d -s benchmard-vim "bash -c 'for i in {1..$count}; do vim --startuptime vim.log +qall; done'; tmux -L benchmark-vim wait-for -S benchmark-vim"
+tmux -L benchmark-vim wait-for benchmark-vim
 awk '/editing/ { sum+=$1; n++} END {print sum / n}' vim.log
 rm vim.log
