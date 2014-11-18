@@ -8,7 +8,7 @@ import sys
 count = 0
 def handle_owner_change(clipboard, event):
     global count
-    print 'clipboard.owner-change(%r, %r)' % (clipboard, event)
+    # print 'clipboard.owner-change(%r, %r)' % (clipboard, event)
     count += 1
     if count > 1:
         sys.exit(0)
