@@ -1,6 +1,4 @@
 #!/bin/bash
 : ${DISPLAY:=":0"}
 export DISPLAY
-xset -dpms
-xset s noblank
-xset s off
+xset -dpms s noblank s off
