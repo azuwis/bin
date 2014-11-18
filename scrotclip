@@ -1,0 +1,3 @@
+#!/bin/bash
+img='/tmp/%Y-%m-%d-%H:%M:%S.png'
+scrot -s $img -e 'imgclip $f'
