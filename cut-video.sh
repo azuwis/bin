@@ -12,4 +12,4 @@ else
     start=$3
     duration=$4
 fi
-ffmpeg -i $input -c copy -ss $start -t $duration $output
+ffmpeg -i $input -c:v copy -c:a copy -ss $start -t $duration $output
