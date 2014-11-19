@@ -38,11 +38,12 @@ adb root
 sleep 3
 adb wait-for-device
 adb remount
-adb push $NOW_CM /sdcard/goomanager/
+adb push $NOW_CM /sdcard/
+read -p "prepared, ctrl+c to cancle"
 adb shell 'echo "set tw_signed_zip_verify 0
-install /storage/emulated/0/goomanager/'$NOW_CM'" > /cache/recovery/openrecoveryscript'
+install /storage/emulated/0/'$NOW_CM'" > /cache/recovery/openrecoveryscript'
 for i in "$@"
 do
-    adb shell 'echo "install /storage/emulated/0/goomanager/'$i'" >> /cache/recovery/openrecoveryscript'
+    adb shell 'echo "install /storage/emulated/0/'$i'" >> /cache/recovery/openrecoveryscript'
 done
 adb reboot recovery
