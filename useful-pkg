@@ -1,4 +1,4 @@
 #!/bin/bash
-aptitude --disable-columns --display-format "%p - %d" search '!~M ~ainstall' >> ~/.instpkg/usefull-pkg
+aptitude --disable-columns --display-format "%p - %d" search '!~M ~ainstall' >> ~/.instpkg/useful-pkg
 sudo aptitude forget-new
 sudo aptitude keep-all
