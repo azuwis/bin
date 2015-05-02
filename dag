@@ -1,0 +1,12 @@
+#!/bin/bash
+pattern=$1
+shift
+
+dpkg-listfile () {
+  dpkg -L "$@" | while read file
+  do
+    [ -f "$file" ] && echo "$file"
+  done
+}
+
+dpkg-listfile "$@" | xargs ag --all-text "$pattern"
