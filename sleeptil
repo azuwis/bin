@@ -1,0 +1,35 @@
+#!/bin/bash
+
+now() {
+    date +%s
+}
+
+print_left() {
+    secs="$1"
+    printf '\r%02dh:%02dm:%02ds' $(($secs/3600)) $(($secs%3600/60)) $(($secs%60))
+}
+
+end_string="$1"
+
+end=$(date -d ${end_string} +%s)
+
+diff=$((${end} - $(now)))
+
+if [ $diff -lt 0 ]; then
+    echo "Time is in past, exiting."
+    exit 1
+fi
+
+(
+    left=$((${end} - $(now)))
+    print_left "$left"
+    while [ "$left" -gt 5 ]
+    do
+        sleep 5
+        left=$((${end} - $(now)))
+        print_left "$left"
+    done
+) &
+
+sleep ${diff}
+printf '\n'
