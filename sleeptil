@@ -16,8 +16,8 @@ end=$(date -d ${end_string} +%s)
 diff=$((${end} - $(now)))
 
 if [ $diff -lt 0 ]; then
-    echo "Time is in past, exiting."
-    exit 1
+    diff=$((diff + 86400))
+    end=$((end + 86400))
 fi
 
 (
