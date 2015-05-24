@@ -15,9 +15,15 @@ end=$(date -d ${end_string} +%s)
 
 diff=$((${end} - $(now)))
 
+# Day changing
 if [ $diff -lt 0 ]; then
     diff=$((diff + 86400))
     end=$((end + 86400))
+fi
+
+if [ $diff -lt 0 ]; then
+    echo "Time is in past, exiting."
+    exit 1
 fi
 
 (
