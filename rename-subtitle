@@ -8,6 +8,7 @@ end
 if videos.size == 0
   videos = Dir.glob('*.{mp4,mkv}')
 end
+videos=videos.sort
 
 subtitles = ARGV.select do |file|
   file =~ /\.(ass|srt|ssa)$/
@@ -15,20 +16,36 @@ end
 if subtitles.size == 0
   subtitles = Dir.glob('*.{ass,srt,ssa}')
 end
+subtitles=subtitles.sort
 
 subtitles.each do |subtitle|
   if subtitle =~ /(s\d+)?[^\d](?<episode>\d{2})[^\d]/i
     episode = $~[:episode]
     matched_videos = videos.select do |video|
-      video =~ Regexp.new("[^\d]#{episode}[^\d]")
+      video =~ Regexp.new("[^0-9]#{episode}[^0-9]")
     end
-    if matched_videos.size > 0
-      matched_video = matched_videos[0]
-      dirname = File.dirname(matched_video)
-      basename = File.basename(matched_video, '.*')
-      subtitle_ext = File.extname(subtitle)
-      wanted_subtitle = File.join(dirname, basename) + subtitle_ext
-      FileUtils.mv(subtitle, wanted_subtitle)
+    if matched_videos.size == 1
+      choose = 0
+    else
+      matched_videos.each_with_index do |video, index|
+        puts "#{index+1}: #{video}"
+      end
+      if subtitles.size == matched_videos.size
+        default_choose = episode.to_i
+      else
+        default_choose = 1
+      end
+      print "Choose video file of episode #{episode}: [#{default_choose}] "
+      choose = $stdin.gets.chomp.to_i
+      choose = default_choose if choose == 0
+      choose -= 1
+      puts choose
     end
+    matched_video = matched_videos[choose]
+    dirname = File.dirname(matched_video)
+    basename = File.basename(matched_video, '.*')
+    subtitle_ext = File.extname(subtitle)
+    wanted_subtitle = File.join(dirname, basename) + subtitle_ext
+    FileUtils.cp(subtitle, wanted_subtitle)
   end
 end
