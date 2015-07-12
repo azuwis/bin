@@ -1,0 +1,26 @@
+#!/bin/bash
+# Hack here, use chinese name to avoid quoting hell
+# DMENU='dmenu.xft -i -fn 文泉驿微米黑-12:normal'
+DMENU='rofi -dmenu'
+
+refresh() {
+    xdotool key ctrl+F5
+}
+
+chrome() {
+    i3-msg 'workspace 3'
+    chromium "$1" &
+}
+
+firefox() {
+    i3-msg 'workspace 2'
+    iceweasel "$1" &
+}
+
+lib="${0}.lib"
+test -e "$lib" && source "$lib"
+
+compgen -A function | tac | $DMENU | (
+    read CMD
+    test x"$(type -t "$CMD")" = x"function" && $CMD
+)
