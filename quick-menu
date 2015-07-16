@@ -17,10 +17,14 @@ firefox() {
     iceweasel "$1" &
 }
 
+_play() {
+    mpv --no-terminal -fs "$@" 2>/dev/null &
+}
+
 lib="${0}.lib"
 test -e "$lib" && source "$lib"
 
-compgen -A function | tac | $DMENU | (
+compgen -A function | grep -v '^_' | tac | $DMENU | (
     read CMD
     test x"$(type -t "$CMD")" = x"function" && $CMD
 )
