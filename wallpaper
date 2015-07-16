@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Set wallpaper using dmenu
+
+set -eu
+
+DMENU="rofi -dmenu"
+
+cd ~/wallpapers
+
+ls -1 *.jpg *.png *.JPG *.PNG | $DMENU | (
+    read file
+    hsetroot -cover "$file"
+    ln -sf "$file" current
+)
