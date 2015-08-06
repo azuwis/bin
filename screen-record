@@ -1,0 +1,83 @@
+#!/bin/bash
+set -eu
+
+record()
+{
+    for i in {3..1}
+    do
+        echo -n "${i}."
+        sleep 1
+    done
+    echo
+    ffmpeg \
+    -f alsa -i pulse -ac 2 \
+    -f x11grab -r 25 -s 1280x720 -i :0.0+0,24 \
+    -acodec flac \
+    -vcodec libx264 -preset ultrafast -threads 2 \
+    -y "$@"
+}
+
+cut () {
+    if [ $# -lt 3 ]; then
+        echo "$0 INPUT OUTPUT START DURATION"
+        exit
+    fi
+    input=$1
+    output=$2
+    if [ $# -eq 3 ]; then
+        start="00:00:00"
+        duration=$3
+    else
+        start=$3
+        duration=$4
+    fi
+    ffmpeg -i $input -c:v copy -c:a copy -ss $start -t $duration $output
+}
+
+denoise() {
+    mkv=$1
+    base="denoise-$mkv"
+    mkdir -p $base
+    if [ ! -e $base/noise.wav ]; then
+        ffmpeg -i $mkv -vn -y $base/noise.wav
+        if echo $mkv | grep -q -v nosound; then
+            normalize-audio $base/noise.wav
+        fi
+    fi
+    if [ ! -e $base/clean.wav ]; then
+        sox $base/noise.wav -n noiseprof $base/noise.prof
+        sox $base/noise.wav $base/clean.wav noisered $base/noise.prof 0.05
+    fi
+    if [ ! -e $base/tmp.ts ]; then
+        ffmpeg -i $mkv -i $base/clean.wav -c:v copy -bsf h264_mp4toannexb -c:a aac -strict experimental -map 0:0 -map 1:0 -y $base/tmp.ts
+    fi
+}
+
+join() {
+    concat='concat:'
+
+    for i in "$@"
+    do
+        concat="${concat}denoise-${i}/tmp.ts|"
+        denoise $i
+    done
+
+    ffmpeg -i "${concat%?}" -c copy -bsf:a aac_adtstoasc output.mp4
+}
+
+usage () {
+    echo "USAGE: $(basename "$0") subcommand"
+    echo
+    echo "SUBCOMMANDS:"
+    for cmd in $(compgen -A function | grep -v '^_')
+    do
+        echo "  $cmd"
+    done
+}
+
+if [ x"$(type -t "$action")" == x"function" ]; then
+    shift
+    "${action}" "$@"
+else
+    usage
+fi
