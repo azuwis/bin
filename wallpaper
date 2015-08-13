@@ -8,7 +8,7 @@ DMENU="rofi -dmenu"
 
 cd ~/wallpapers
 
-ls -1 *.jpg *.png *.JPG *.PNG | $DMENU | (
+ls -1 *.jpg *.png *.JPG *.PNG 2>/dev/null | $DMENU | (
     read file
     hsetroot -cover "$file"
     ln -sf "$file" current
