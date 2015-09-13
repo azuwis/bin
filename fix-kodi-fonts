@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -eu
+
+cn_font_url='https://github.com/android/platform_frameworks_base/raw/master/data/fonts/DroidSansFallbackFull.ttf'
+cn_font_file="$(basename "$cn_font_url")"
+
+kodi_fonts_dir="$1"
+
+wget -P /tmp/ -nc "$cn_font_url"
+
+backup_dir="${kodi_fonts_dir}/backup.$(date +%Y%m%d%H%M%S)/"
+
+mkdir -p "$backup_dir"
+
+for font in "$kodi_fonts_dir"/*.ttf
+do
+    mv "$font" "$backup_dir"
+    merge-fonts.pe "${backup_dir}/$(basename "$font")" "/tmp/${cn_font_file}" "$font"
+done
