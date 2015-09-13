@@ -2,7 +2,7 @@
 
 # http://7thgen.info/blog/2008/07/merging-font-with-fontforge/
 
-if( $argc!=3 )
+if( $argc != 4 )
     Print()
     Print("Usage: ", $0, " en.ttf cn.ttf output.ttf")
     return(0)
