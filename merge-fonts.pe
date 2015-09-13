@@ -1,0 +1,26 @@
+#!/usr/bin/fontforge
+
+# http://7thgen.info/blog/2008/07/merging-font-with-fontforge/
+
+if( $argc!=3 )
+    Print()
+    Print("Usage: ", $0, " en.ttf cn.ttf output.ttf")
+    return(0)
+endif
+
+# Pre-operation for some non-standard Chinese font file
+Open($2)
+SelectAll()
+ScaleToEm(1024)
+Generate("/tmp/merge-fonts.ttf", "", 0x14)
+Close()
+
+# Open English font and merge to the Chinese font
+Open($1)
+SelectAll()
+ScaleToEm(1024)
+
+MergeFonts("/tmp/merge-fonts.ttf")
+# SetFontNames("FontName", "Font Family", "Full Name", "Style", "")
+Generate($3, "", 0x14)
+Close()
