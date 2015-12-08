@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# fix-kodi-fonts ~/.kodi/addons/skin.arctic.zephyr/fonts
+
 set -eu
 
 cn_font_url='https://github.com/android/platform_frameworks_base/raw/master/data/fonts/DroidSansFallbackFull.ttf'
