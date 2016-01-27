@@ -1,0 +1,7 @@
+#!/bin/bash
+time (
+for i in $(seq 100)
+do
+  zsh -i -c 'echo -n'
+done
+)
