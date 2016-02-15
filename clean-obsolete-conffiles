@@ -25,6 +25,11 @@ do
   fi
 done
 
+if [ x"$all_pkgs" = x -o x"$all_conffiles" = x ]; then
+    echo "No obsolete conffiles, exiting."
+    exit 0
+fi
+
 echo "All packages: $all_pkgs"
 echo "All conffiles: $all_conffiles"
 echo ""
