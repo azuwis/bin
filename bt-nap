@@ -1,0 +1,36 @@
+#!/bin/bash
+
+nap_addrs=()
+nap_names=()
+while read addr name
+do
+    if echo "info $addr" | bluetoothctl 2>/dev/null | grep -q ' NAP '; then
+        nap_addrs+=("$addr")
+        nap_names+=("$name")
+    fi
+done < <(bluetoothctl </dev/null | grep -F ' Device ' | cut -d ' ' -f 4-)
+
+number_of_nap=${#nap_addrs[@]}
+if [ "$number_of_nap" -eq 0 ]; then
+    echo "No NAP device paired, exiting."
+    exit 1
+elif [ "$number_of_nap" -eq 1 ]; then
+    selected_nap=0
+else
+    echo "Available NAP devices:"
+    echo ""
+    for i in $(seq 0 "$((number_of_nap-1))")
+    do
+        echo "$i ${nap_addrs[$i]} ${nap_names[$i]}"
+    done
+    echo ""
+    read -p "Select[0-$((number_of_nap-1))]: " selected_nap
+fi
+
+echo ""
+echo "Connecting to ${nap_addrs[$selected_nap]} ${nap_names[$selected_nap]}"
+echo ""
+
+nap_addr=${nap_addrs[$selected_nap]}
+dbus-send --system --type=method_call --dest=org.bluez "/org/bluez/hci0/dev_${nap_addr//:/_}" org.bluez.Network1.Connect string:'nap'
+tailf /var/log/syslog
