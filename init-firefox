@@ -1,0 +1,23 @@
+#!/bin/bash
+addon_dir="${HOME}/.mozilla/firefox/default/extensions"
+
+install_addon() {
+    addon_id="$1"
+    addon_name="$2"
+    if [[ "$addon_name" != https://* ]]; then
+        addon_name="https://addons.mozilla.org/firefox/downloads/latest/${addon_name}"
+    fi
+    if [ -f "${addon_dir}/${addon_id}.xpi" -o -d "${addon_dir}/${addon_id}" ]; then
+        echo "skip ${addon_name}"
+    else
+        echo "install ${addon_name}"
+        firefox "$addon_name"
+    fi
+}
+
+install_addon https-everywhere@eff.org https-everywhere
+install_addon uBlock0@raymondhill.net ublock-origin
+install_addon VimFx@akhodakivskiy.github.com vimfx
+install_addon ClassicThemeRestorer@ArisT2Noia4dev classicthemerestorer
+install_addon thefoxonlybetter@quicksaver the-fox-only-better
+# install_addon '{1280606b-2510-4fe0-97ef-9b5a22eafe30}' session-manager
