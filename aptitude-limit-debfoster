@@ -1,0 +1,10 @@
+#!/bin/bash
+pattern="~i"
+while read pkg
+do
+    if [ x"${pkg::1}" != x"-" ]; then
+        pattern="${pattern} ?not(?exact-name(${pkg}))"
+    fi
+done < /var/lib/debfoster/keepers
+
+sudo aptitude -o "Aptitude::Pkg-Display-Limit=${pattern}"
