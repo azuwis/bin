@@ -1,4 +1,11 @@
 #!/bin/bash
+# How to pair:
+# more: https://wiki.archlinux.org/index.php/Bluetooth
+# $ bluetoothctl
+# > power on
+# > scan on
+# > agent on
+# > pair <MAC>
 
 nap_addrs=()
 nap_names=()
