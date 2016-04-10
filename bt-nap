@@ -53,3 +53,4 @@ echo ""
 
 dbus-send --system --type=method_call --dest=org.bluez "/org/bluez/hci0/dev_${nap_addr//:/_}" org.bluez.Network1.Connect string:'nap'
 tailf /var/log/syslog
+ip addr
