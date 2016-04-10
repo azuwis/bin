@@ -34,10 +34,22 @@ else
     read -p "Select[0-$((number_of_nap-1))]: " selected_nap
 fi
 
+nap_addr=${nap_addrs[$selected_nap]}
+nap_name=${nap_names[$selected_nap]}
+
+if [ x"$1" = x"off" ]; then
+    echo ""
+    echo "Disonnecting ${nap_addr} ${nap_name}"
+    echo ""
+    echo "disconnect $nap_addr" | bluetoothctl 2>/dev/null
+    echo ""
+    ip addr
+    exit
+fi
+
 echo ""
-echo "Connecting to ${nap_addrs[$selected_nap]} ${nap_names[$selected_nap]}"
+echo "Connecting to ${nap_addr} ${nap_name}"
 echo ""
 
-nap_addr=${nap_addrs[$selected_nap]}
 dbus-send --system --type=method_call --dest=org.bluez "/org/bluez/hci0/dev_${nap_addr//:/_}" org.bluez.Network1.Connect string:'nap'
 tailf /var/log/syslog
