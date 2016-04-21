@@ -1,0 +1,52 @@
+#!/bin/busybox ash
+IFACE=eth0
+DELAY=0
+LOSS=0
+
+flush_tc() {
+    tc qdisc del dev $IFACE root 2> /dev/null > /dev/null
+}
+
+usage() {
+cat << EOF
+USAGE: $0 [-i <iface>] [-u <upload_rate>] [-d <delay>] [-l <packet_loss_percent>]
+       $0 [-i <iface>] status
+       $0 [-i <iface>] stop
+
+       default iface is $IFACE
+
+EXAMPLE: $0 -i eth0 -u 256kbit -d 100ms -l 10%
+EOF
+exit 1
+}
+
+if [ $# -eq 0 ]; then usage; fi
+
+GETOPT=`getopt -o i:u:d:l: -- "$@"`
+if [ $? != 0 ]; then usage; fi
+eval set -- "$GETOPT"
+
+while true; do
+    case $1 in
+        -i) IFACE=$2; shift 2;;
+        -u) UPLOAD=$2; shift 2;;
+        -d) DELAY=$2; shift 2;;
+        -l) LOSS=$2; shift 2;;
+        --) shift; break;;
+    esac
+done
+
+if [ x"$1" = x"stop" ]; then
+    flush_tc
+    exit
+elif [ x"$1" = x"status" ]; then
+    tc -s qdisc ls dev $IFACE
+    tc -s class ls dev $IFACE
+    exit
+fi
+
+flush_tc
+tc qdisc add dev $IFACE root handle 1:0 netem delay $DELAY loss $LOSS
+if [ x"$UPLOAD" != x ]; then
+    tc qdisc add dev $IFACE parent 1:1 handle 10: tbf rate $UPLOAD buffer 1600 limit 3000
+fi
