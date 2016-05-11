@@ -33,9 +33,11 @@ if [ ! -e .git ]; then
   git push -u origin gh-pages
 else
   git add .
-  if [ "$(git status --porcelain | wc -l)" -gt 0 ]; then
-    git commit --amend --no-edit
-    git push --force
+  if [ "$(git status --porcelain | grep -cEv '/(InRelease|Release|Release.gpg)$')" -gt 0 ]; then
+    git commit -m 'Update'
+    git push
+  else
+      git reset --hard
   fi
 fi
 
