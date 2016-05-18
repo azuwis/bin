@@ -39,6 +39,9 @@ nap_name=${nap_names[$selected_nap]}
 
 if [ x"$1" = x"off" ]; then
     echo ""
+    echo "ifdown bnep0"
+    sudo ifdown bnep0
+    echo ""
     echo "Disonnecting ${nap_addr} ${nap_name}"
     echo ""
     echo "disconnect $nap_addr" | bluetoothctl 2>/dev/null
