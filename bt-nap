@@ -40,6 +40,7 @@ nap_name=${nap_names[$selected_nap]}
 if [ x"$1" = x"off" ]; then
     echo ""
     echo "ifdown bnep0"
+    echo ""
     sudo ifdown bnep0
     echo ""
     echo "Disonnecting ${nap_addr} ${nap_name}"
@@ -55,5 +56,5 @@ echo "Connecting to ${nap_addr} ${nap_name}"
 echo ""
 
 dbus-send --system --type=method_call --dest=org.bluez "/org/bluez/hci0/dev_${nap_addr//:/_}" org.bluez.Network1.Connect string:'nap'
-tailf /var/log/syslog
-ip addr
+(sleep 2; sudo ifup bnep0) &
+journalctl -n 0 -f /sbin/dhclient
