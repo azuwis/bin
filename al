@@ -13,7 +13,7 @@ fi
 aptly repo show local >/dev/null || aptly repo create local
 aptly repo add local deb/
 
-aptly mirror show paper-theme >/dev/null || aptly mirror create -filter=paper-icon-theme -filter-with-deps=true paper-theme ppa:snwh/pulp
+aptly mirror show paper-theme >/dev/null || aptly mirror create -filter='paper-icon-theme|paper-cursor-theme' -filter-with-deps=true paper-theme ppa:snwh/pulp
 aptly mirror update paper-theme
 aptly repo import paper-theme local Name
 
