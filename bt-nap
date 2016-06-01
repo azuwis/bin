@@ -56,5 +56,7 @@ echo "Connecting to ${nap_addr} ${nap_name}"
 echo ""
 
 dbus-send --system --type=method_call --dest=org.bluez "/org/bluez/hci0/dev_${nap_addr//:/_}" org.bluez.Network1.Connect string:'nap'
-(sleep 2; sudo ifup bnep0) &
-journalctl -n 0 -f /sbin/dhclient
+sleep 2
+sudo ifup bnep0
+# (sleep 2; sudo ifup bnep0) &
+# journalctl -n 0 -f /sbin/dhclient
