@@ -15,6 +15,7 @@ aptly repo add local deb/
 
 aptly mirror show paper-theme >/dev/null || aptly mirror create -filter='paper-icon-theme|paper-cursor-theme' -filter-with-deps=true paper-theme ppa:snwh/pulp
 aptly mirror update paper-theme
+aptly repo remove local 'paper-icon-theme|paper-cursor-theme'
 aptly repo import paper-theme local Name
 
 if aptly publish list | grep -qF ' ./sid '; then
