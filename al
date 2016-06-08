@@ -10,7 +10,15 @@ cat > ~/.aptly.conf <<EOF
 EOF
 fi
 
-aptly repo show local >/dev/null || aptly repo create local
+if aptly publish list | grep -qF ' ./sid '; then
+  aptly publish drop sid
+fi
+
+if aptly repo show local >/dev/null; then
+  aptly repo drop local
+fi
+
+aptly repo create local
 aptly repo add local deb/
 
 aptly mirror show paper-theme >/dev/null || aptly mirror create -filter='paper-icon-theme|paper-cursor-theme' -filter-with-deps=true paper-theme ppa:snwh/pulp
@@ -18,11 +26,9 @@ aptly mirror update paper-theme
 aptly repo remove local 'paper-icon-theme|paper-cursor-theme'
 aptly repo import paper-theme local Name
 
-if aptly publish list | grep -qF ' ./sid '; then
-  aptly publish update sid
-else
-  aptly publish repo -distribution="sid" -skip-contents local
-fi
+aptly publish repo -distribution="sid" -skip-contents local
+aptly db cleanup
+aptly repo show -with-packages local
 
 cd ~/.aptly/public
 if [ ! -e .git ]; then
@@ -41,5 +47,3 @@ else
       git reset --hard
   fi
 fi
-
-# aptly repo show -with-packages local
