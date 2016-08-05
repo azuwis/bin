@@ -41,8 +41,8 @@ if [ ! -e .git ]; then
 else
   git add .
   if [ "$(git status --porcelain | grep -cEv '/(InRelease|Release|Release.gpg)$')" -gt 0 ]; then
-    git commit -m 'Update'
-    git push
+    git commit --amend --no-edit
+    git push --force
   else
       git reset --hard
   fi
