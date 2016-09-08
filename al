@@ -48,6 +48,8 @@ else
   if [ "$(git status --porcelain | grep -cEv '/(InRelease|Release|Release.gpg)$')" -gt 0 ]; then
     git commit --amend --no-edit
     git push --force
+    git reflog expire --expire=now --all
+    git gc --prune=now --aggressive
   else
       git reset --hard
   fi
