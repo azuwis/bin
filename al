@@ -1,6 +1,11 @@
 #!/bin/bash
 set -eu
 
+if [ x"$1" = x"list" ]; then
+  aptly repo show -with-packages local
+  exit
+fi
+
 if [ ! -e ~/.aptly.conf ]; then
 cat > ~/.aptly.conf <<EOF
 {
