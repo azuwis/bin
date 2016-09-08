@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -e
 
 if [ x"$1" = x"list" ]; then
   aptly repo show -with-packages local
