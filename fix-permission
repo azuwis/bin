@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+dir="$1"
+if [ x"$dir" = x ]; then
+    cat <<EOF
+Usage: $0 <dir>
+EOF
+    exit
+fi
+
+dir="$(readlink -f "$dir")"
+read -p "fix permission of ${dir}?[yN]" input
+if [ x"$input" != x"y" ]; then
+    exit
+fi
+
+sudo chown -R "${USER}:" "$dir"
+find "$dir" -type f -exec chmod 644 '{}' ';'
+find "$dir" -type d -exec chmod 755 '{}' ';'
