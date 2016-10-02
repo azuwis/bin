@@ -1,3 +1,4 @@
 #!/bin/sh
 cd /tmp/
-scrot -s -e 'tesseract $f -' | xsel
+scrot -s -e 'tesseract $f -' | xsel -b
+xsel -b
