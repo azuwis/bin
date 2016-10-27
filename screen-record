@@ -75,6 +75,7 @@ usage () {
     done
 }
 
+action="$1"
 if [ x"$(type -t "$action")" == x"function" ]; then
     shift
     "${action}" "$@"
