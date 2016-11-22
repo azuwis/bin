@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+count=${1:-50}
+cd /dev/shm
+rm -f nvim.log
+tmux -L benchmark-nvim new-session -d -s benchmard-nvim "bash -c 'for i in {1..$count}; do nvim --startuptime nvim.log +qall; done'; tmux -L benchmark-nvim wait-for -S benchmark-nvim"
+tmux -L benchmark-nvim wait-for benchmark-nvim
+awk '/editing/ { sum+=$1; n++} END {print sum / n}' nvim.log
+rm nvim.log
