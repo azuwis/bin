@@ -15,7 +15,7 @@ do
         nap_addrs+=("$addr")
         nap_names+=("$name")
     fi
-done < <(bluetoothctl </dev/null | grep -F ' Device ' | cut -d ' ' -f 4-)
+done < <(echo paired-devices | bluetoothctl 2>/dev/null | grep -F ' Device ' | cut -d ' ' -f 4-)
 
 number_of_nap=${#nap_addrs[@]}
 if [ "$number_of_nap" -eq 0 ]; then
