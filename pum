@@ -76,6 +76,8 @@ def mainloop(stdscr):
                 os.path.join(MOUNT_PATH, devices[selection_index])])
             if devices[selection_index] == 'Kindle':
                 subprocess.call(['eject', '/dev/disk/by-label/Kindle'])
+            if len(getDevices()) == 0:
+                break
 
 if __name__ == "__main__":
     curses.wrapper(mainloop)
