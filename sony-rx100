@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -e
+
+date="$(date +%Y%m%d%H%M)"
+label="Sony_RX100"
+
+cd ~/Pictures
+mkdir -p logs
+ln -sf "sync-$date-changed.log" logs/changed.log
+
+echo "sync:"
+rsync "$@" --out-format='%i %n' -a "/media/$label/" "$label/" \
+    | tee "logs/sync-$date-full.log" \
+    | awk -W interactive '$1 == ">f+++++++++" && $NF ~ /\.(JPG|MP4)$/ {print "'$label'/" substr($0,13)}' \
+    | tee "logs/sync-$date-changed.log"
+echo
+
+for dir in /media/PMHOME "/media/$label"
+do
+  if [ -d "$dir" ]
+  then
+    udevil umount "$dir"
+  fi
+done
+
+if [ -s "logs/sync-$date-changed.log" ]; then
+    gphotos -l "logs/sync-$date-changed.log"
+else
+    echo "No new files to upload."
+fi
