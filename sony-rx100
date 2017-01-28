@@ -26,6 +26,7 @@ done
 
 if [ -s "logs/sync-$date-changed.log" ]; then
     gphotos -l "logs/sync-$date-changed.log"
+    mv "logs/sync-$date-changed.log" "logs/sync-$date-uploaded.log"
 else
     echo "No new files to upload."
 fi
