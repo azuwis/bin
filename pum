@@ -72,9 +72,14 @@ def mainloop(stdscr):
         elif c == KEY_DOWN:
             selection_index += 1
         elif c == KEY_ENTER or c == KEY_U:
-            subprocess.call(['udevil', UMOUNT_CMD,
-                os.path.join(MOUNT_PATH, devices[selection_index])])
-            if devices[selection_index] == 'Kindle':
+            device = devices[selection_index]
+            if device == 'sshfs' or device == 'mtpfs':
+                subprocess.call(['fusermount', '-u',
+                    os.path.join(MOUNT_PATH, device)])
+            else:
+                subprocess.call(['udevil', UMOUNT_CMD,
+                    os.path.join(MOUNT_PATH, device)])
+            if device == 'Kindle':
                 subprocess.call(['eject', '/dev/disk/by-label/Kindle'])
             if len(getDevices()) == 0:
                 break
