@@ -1,0 +1,21 @@
+#!/bin/sh
+if systemctl --quiet is-active shadowsocks-redir; then
+    echo 'off'
+    sudo systemctl stop shadowsocks-redir dnsmasq
+    while grep -qFx 'nameserver 127.0.0.1' /etc/resolv.conf
+    do
+        echo -n '.'
+        sleep 0.5
+    done
+    echo
+else
+    echo -n 'on'
+    sudo systemctl start shadowsocks-redir dnsmasq
+    sudo systemctl restart resolvconf
+    while ! grep -qFx 'nameserver 127.0.0.1' /etc/resolv.conf
+    do
+        echo -n '.'
+        sleep 0.5
+    done
+    echo
+fi
