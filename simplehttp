@@ -25,6 +25,11 @@ if sys.argv[2:]:
     os.chdir(sys.argv[2])
 
 server = ThreadingSimpleServer(('', port), SimpleHTTPRequestHandler)
+
+if sys.argv[3:] and sys.argv[3] == 'https':
+    import ssl
+    server.socket = ssl.wrap_socket (server.socket, certfile='/etc/ssl/certs/ssl-cert-snakeoil.pem', keyfile='/etc/ssl/private/ssl-cert-snakeoil.key' ,server_side=True)
+
 try:
     while 1:
         sys.stdout.flush()
