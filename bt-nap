@@ -24,6 +24,22 @@ do
 done < <(bt-device --list | grep -vF 'Added devices:')
 
 number_of_nap=${#nap_addrs[@]}
+
+if [ x"$1" = x"off" ]; then
+    echo ""
+    echo "ifdown bnep0"
+    echo ""
+    sudo ifdown bnep0
+    echo ""
+    for i in $(seq 0 "$((number_of_nap-1))")
+    do
+        bt-device "--disconnect=${nap_addrs[$i]}"
+    done
+    echo ""
+    ip addr
+    exit
+fi
+
 if [ "$number_of_nap" -eq 0 ]; then
     echo "No NAP device paired, exiting."
     exit 1
@@ -42,18 +58,6 @@ fi
 
 nap_addr=${nap_addrs[$selected_nap]}
 nap_name=${nap_names[$selected_nap]}
-
-if [ x"$1" = x"off" ]; then
-    echo ""
-    echo "ifdown bnep0"
-    echo ""
-    sudo ifdown bnep0
-    echo ""
-    bt-device "--disconnect=$nap_addr"
-    echo ""
-    ip addr
-    exit
-fi
 
 echo ""
 echo "Connecting to ${nap_addr} ${nap_name}"
