@@ -6,16 +6,22 @@
 # > scan on
 # > agent on
 # > pair <MAC>
+# > agent off
+# > scan off
 
 nap_addrs=()
 nap_names=()
-while read addr name
+while read line
 do
-    if echo "info $addr" | bluetoothctl 2>/dev/null | grep -q ' NAP '; then
+    name="${line% *}"
+    addr="${line##* }"
+    addr="${addr#\(}"
+    addr="${addr%\)}"
+    if bt-device "--info=$addr"| grep -q 'NAP,'; then
         nap_addrs+=("$addr")
         nap_names+=("$name")
     fi
-done < <(echo paired-devices | bluetoothctl 2>/dev/null | grep -F ' Device ' | cut -d ' ' -f 4-)
+done < <(bt-device --list | grep -vF 'Added devices:')
 
 number_of_nap=${#nap_addrs[@]}
 if [ "$number_of_nap" -eq 0 ]; then
@@ -43,9 +49,7 @@ if [ x"$1" = x"off" ]; then
     echo ""
     sudo ifdown bnep0
     echo ""
-    echo "Disonnecting ${nap_addr} ${nap_name}"
-    echo ""
-    echo "disconnect $nap_addr" | bluetoothctl 2>/dev/null
+    bt-device "--disconnect=$nap_addr"
     echo ""
     ip addr
     exit
