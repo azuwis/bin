@@ -1,0 +1,22 @@
+#!/bin/bash
+since=${1:-today}
+total=0
+resume=0
+while read epoch _ log
+do
+    epoch=${epoch%.*}
+    case "$log" in
+        *resumed*)
+            resume="$epoch"
+            ;;
+        *Suspending*)
+            if [ "$resume" -ne 0 ]
+            then
+                on=$((epoch - resume))
+                total=$((total + on))
+                echo "$(date --date="@$resume" '+%b %d %T') $(TZ=UTC0 printf '%(%H:%M:%S)T\n' "$on")"
+            fi
+            ;;
+    esac
+done < <(journalctl --quiet --no-pager --no-hostname --output=short-unix /lib/systemd/systemd-sleep --since="$since"; echo "$(date +%s) _ Suspending")
+echo "total           $(TZ=UTC0 printf '%(%H:%M:%S)T\n' "$total")"
