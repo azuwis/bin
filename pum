@@ -36,9 +36,12 @@ KEY_ESCAPE = 27
 KEY_ENTER = 10
 
 def getDevices():
+    with open('/proc/mounts','r') as f:
+        mounts = [line.split()[1] for line in f.readlines()]
     dirs = os.listdir(MOUNT_PATH)
     return [dirname for dirname in dirs 
-            if dirname not in EXCLUDES]
+            if dirname not in EXCLUDES
+            and os.path.join(MOUNT_PATH, dirname) in mounts]
 
 def drawScreen(stdscr, devices, selection_index):
     stdscr.clear()
