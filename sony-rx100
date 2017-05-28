@@ -8,6 +8,10 @@ LABEL="Sony_RX100"
 mkdir -p ~/Pictures/logs
 cd ~/Pictures
 
+do_play() {
+    sort -t/ -k4.4 -u "$@" | mpv --really-quiet --keep-open=no --panscan=1.0 --image-display-duration=4 --playlist -
+}
+
 do_sync() {
     echo "sync:"
     rsync "$@" --out-format='%i %n' -a "/media/$LABEL/" "$LABEL/" \
@@ -41,9 +45,22 @@ do_upload() {
     fi
 }
 
-if [ -d "/media/$LABEL" ]
+if [ "$#" -gt 0 ]
 then
-    do_sync
-    do_umount
+    if [[ "$1" =~ ^[0-9]+$ ]]
+    then
+        do_play $(find logs -mtime "-$1" \( -name '*-uploaded.log' -o -name '*-changed.log' \))
+    else
+        do_play "$@"
+    fi
+else
+    if [ -d "/media/$LABEL" ]
+    then
+        do_sync
+        do_umount
+        do_play logs/changed.log &
+        do_upload
+    else
+        do_upload
+    fi
 fi
-do_upload
