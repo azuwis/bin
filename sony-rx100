@@ -1,32 +1,49 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
-date="$(date +%Y%m%d%H%M)"
-label="Sony_RX100"
+DATE="$(date +%Y%m%d%H%M)"
+LABEL="Sony_RX100"
 
+mkdir -p ~/Pictures/logs
 cd ~/Pictures
-mkdir -p logs
-ln -sf "sync-$date-changed.log" logs/changed.log
 
-echo "sync:"
-rsync "$@" --out-format='%i %n' -a "/media/$label/" "$label/" \
-    | tee "logs/sync-$date-full.log" \
-    | awk -W interactive '$1 == ">f+++++++++" && $NF ~ /\.(JPG|MP4)$/ {print "'$label'/" substr($0,13)}' \
-    | tee "logs/sync-$date-changed.log"
-echo
+do_sync() {
+    echo "sync:"
+    rsync "$@" --out-format='%i %n' -a "/media/$LABEL/" "$LABEL/" \
+        | tee "logs/sync-$DATE-full.log" \
+        | awk -W interactive '$1 == ">f+++++++++" && $NF ~ /\.(JPG|MP4)$/ {print "'$LABEL'/" substr($0,13)}' \
+        | tee "logs/sync-$DATE-changed.log"
+    echo
+    ln -sf "sync-$DATE-changed.log" logs/changed.log
+}
 
-for dir in /media/PMHOME "/media/$label"
-do
-  if [ -d "$dir" ]
-  then
-    udevil umount "$dir"
-  fi
-done
+do_umount() {
+    local dir
+    for dir in /media/PMHOME "/media/$LABEL"
+    do
+        if [ -d "$dir" ]
+        then
+            udevil umount "$dir"
+        fi
+    done
+}
 
-if [ -s "logs/sync-$date-changed.log" ]; then
-    gphotos -l "logs/sync-$date-changed.log"
-    mv "logs/sync-$date-changed.log" "logs/sync-$date-uploaded.log"
-else
-    echo "No new files to upload."
+do_upload() {
+    local changed
+    changed="$(readlink -f logs/changed.log)"
+    if [ -s "$changed" ]
+    then
+        gphotos -l "$changed"
+        mv "$changed" "${changed/changed/uploaded}"
+    else
+        echo "No new files to upload."
+    fi
+}
+
+if [ -d "/media/$LABEL" ]
+then
+    do_sync
+    do_umount
 fi
+do_upload
