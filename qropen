@@ -1,0 +1,7 @@
+#!/bin/sh
+img="/tmp/qropen.png"
+maim -s "$img"
+url="$(zbarimg -q --raw "$img")"
+if [ x"$url" != x ]; then
+    firefox "$url"
+fi
