@@ -1,10 +1,12 @@
 /abr
+/andscan
 /bb
 /fetchsub
 /gen-ssh-config
 /get-cert
 /lede
 /lein
+/mget
 /mpv_identify.sh
 /office
 /portal
