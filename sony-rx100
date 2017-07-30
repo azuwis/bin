@@ -3,6 +3,7 @@
 set -e
 
 DATE="$(date +%Y%m%d%H%M)"
+MOUNT_BASE="/media/$USER"
 LABEL="Sony_RX100"
 
 mkdir -p ~/Pictures/logs
@@ -21,7 +22,7 @@ do_play() {
 
 do_sync() {
     echo "sync:"
-    rsync "$@" --out-format='%i %n' -a "/media/$LABEL/" "$LABEL/" \
+    rsync "$@" --out-format='%i %n' -a "$MOUNT_BASE/$LABEL/" "$LABEL/" \
         | tee "logs/sync-$DATE-full.log" \
         | awk -W interactive '$1 == ">f+++++++++" && $NF ~ /\.(JPG|MP4)$/ {print "'$LABEL'/" substr($0,13)}' \
         | tee "logs/sync-$DATE-changed.log"
@@ -31,7 +32,7 @@ do_sync() {
 
 do_umount() {
     local dir
-    for dir in /media/PMHOME "/media/$LABEL"
+    for dir in "$MOUNT_BASE/PMHOME" "$MOUNT_BASE/LABEL"
     do
         if [ -d "$dir" ]
         then
@@ -61,7 +62,7 @@ then
         do_play "$@"
     fi
 else
-    if [ -d "/media/$LABEL" ]
+    if [ -d "$MOUNT_BASE/$LABEL" ]
     then
         do_sync
         do_umount
