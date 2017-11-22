@@ -15,9 +15,8 @@ install_addon() {
     fi
 }
 
-# install_addon https-everywhere@eff.org https-everywhere
-# install_addon uBlock0@raymondhill.net ublock-origin
-install_addon VimFx@akhodakivskiy.github.com vimfx
-# install_addon ClassicThemeRestorer@ArisT2Noia4dev classicthemerestorer
-# install_addon thefoxonlybetter@quicksaver the-fox-only-better
+install_addon https-everywhere@eff.org https-everywhere
+install_addon jid1-BoFifL9Vbdl2zQ@jetpack decentraleyes
+install_addon tridactyl.vim@cmcaine.co.uk tridactyl-vim
+install_addon uBlock0@raymondhill.net ublock-origin
 # install_addon '{1280606b-2510-4fe0-97ef-9b5a22eafe30}' session-manager
