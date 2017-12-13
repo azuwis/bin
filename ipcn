@@ -1,0 +1,2 @@
+#!/bin/sh
+curl -s "$(curl -s http://nstool.netease.com/ | grep -oE 'http://[^/]+/')" | iconv -f gbk | tr -s '<br>' "\n"
