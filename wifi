@@ -1,0 +1,8 @@
+#!/bin/sh
+iface="$(find /sys/class/net -mindepth 1 -maxdepth 1 -name 'wl*' -printf "%P\n" | head -n 1)"
+if [ -n "$iface" ]
+then
+    /sbin/wpa_cli -i "$iface" disconnect
+    /sbin/wpa_cli -i "$iface" reconnect
+    /sbin/wpa_cli -i "$iface"
+fi
