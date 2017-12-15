@@ -1,8 +1,17 @@
 #!/bin/sh
 iface="$(find /sys/class/net -mindepth 1 -maxdepth 1 -name 'wl*' -printf "%P\n" | head -n 1)"
-if [ -n "$iface" ]
+WPA="/sbin/wpa_cli -i $iface"
+if [ -z "$iface" ]
 then
-    /sbin/wpa_cli -i "$iface" disconnect
-    /sbin/wpa_cli -i "$iface" reconnect
-    /sbin/wpa_cli -i "$iface"
+    echo "No wireless interface found"
+    exit 1
 fi
+
+case "$1" in
+    r)
+        $WPA disconnect
+        $WPA reconnect
+        ;;
+esac
+
+$WPA
