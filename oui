@@ -1,0 +1,7 @@
+#!/bin/bash
+
+mac="$1"
+
+search="${mac//:/}"
+search="${search:0:6}"
+grep -A3 -i "${search}" /usr/share/ieee-data/oui.txt
