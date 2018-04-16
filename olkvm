@@ -1,0 +1,2 @@
+#!/bin/sh
+sudo lkvm run --kernel openwrt-x86-64-vmlinuz --disk openwrt-x86-64-rootfs-ext4.img --network host_ip=192.168.1.2
