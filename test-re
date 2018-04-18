@@ -1,0 +1,95 @@
+#!/bin/bash
+
+test() {
+    expected="$1"
+    shift
+    got="$(faketime '2018-04-18 15:44' re -n "$@")"
+    if [ "$expected" != "$got" ]
+    then
+        echo "failed: $@"
+        echo "expected:"
+        echo "$expected"
+        echo "got:"
+        echo "$got"
+    else
+        echo "pass: $@"
+    fi
+}
+
+test 'title: title
+start: 04/19/2018
+end: 04/19/2018
+allday: yes
+duration: 1d' d title
+
+test 'title: title
+start: 04/21/2018
+end: 04/21/2018
+allday: yes
+duration: 1d' 4/21 title
+
+test 'title: title
+start: 04/18/2018 17:44
+end: 04/18/2018 18:44
+allday: no
+duration: 60m' 2h title
+
+test 'title: title
+start: 04/18/2018 08:30
+end: 04/18/2018 09:30
+allday: no
+duration: 60m' 830 title
+
+test 'title: title
+start: 04/19/2018 17:44
+end: 04/20/2018 23:59
+allday: no
+duration: 1815m' d d 2h title
+
+test 'title: title
+start: 04/19/2018
+end: 04/20/2018
+allday: yes
+duration: 2d' d d title
+
+test 'title: title
+start: 04/19/2018
+end: 04/21/2018
+allday: yes
+duration: 3d' d 4/21 title
+
+test 'title: title
+start: 04/19/2018 17:44
+end: 04/19/2018 18:44
+allday: no
+duration: 60m' d 2h title
+
+test 'title: title
+start: 04/19/2018 08:30
+end: 04/19/2018 09:30
+allday: no
+duration: 60m' d 830 title
+
+test 'title: title
+start: 04/20/2018
+end: 04/22/2018
+allday: yes
+duration: 3d' 4/20 4/22 title
+
+test 'title: title
+start: 04/20/2018 17:44
+end: 04/20/2018 18:44
+allday: no
+duration: 60m' 4/20 2h title
+
+test 'title: title
+start: 04/20/2018 08:30
+end: 04/20/2018 09:30
+allday: no
+duration: 60m' 4/20 830 title
+
+test 'title: title
+start: 04/18/2018 17:44
+end: 04/18/2018 19:44
+allday: no
+duration: 120m' 2h 2h title
