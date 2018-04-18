@@ -65,7 +65,7 @@ start_time="$(date -d "${DATETIME[*]:0:4}" '+%H:%M')"
 [ -z "${DATETIME[6]}" ] && {
     DATETIME[6]="$start_time"
     # end_time_relative is not set
-    [ -z "${DATETIME[7]}" ] && DATETIME[7]='1hour'
+    [ -z "${DATETIME[7]}" ] && DATETIME[7]="$default_duration"
 }
 # end_date or end_date_relative is set
 [ "${DATETIME[8]}" -eq 8 ] && [ "${DATETIME[9]}" -eq 4 ] && {
