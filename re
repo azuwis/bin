@@ -35,6 +35,7 @@ fi
 
 ARGS=("$@")
 
+# parse start_date end_date
 for i in "${!ARGS[@]}"
 do
     parse "$i" '^[0-9]*d$' 1 "${ARGS[i]}ay" ||
@@ -50,10 +51,22 @@ do
         parse "$i" '^[0-9]{1,2}/[0-9]{1,2}(/[0-9]{2,4})?$' 0 "${ARGS[i]}"
 done
 
+# parse start_time end_time
 for i in "${!ARGS[@]}"
 do
     parse "$i" '^[0-9]*h$' 3 "${ARGS[i]}our" ||
         parse "$i" '^[0-9]{1,4}$' 2 "${ARGS[i]}"
+done
+
+# parse reminder
+reminder="$default_reminder"
+for i in "${!ARGS[@]}"
+do
+    if [[ "${ARGS[i]}" =~ ^[0-9]+r$ ]]
+    then
+        reminder="${ARGS[i]%r}"
+        unset 'ARGS[i]'
+    fi
 done
 
 start_date="$(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y')"
@@ -101,6 +114,7 @@ echo "start: $start"
 echo "end: $end"
 [ -n "$allday" ] && echo "allday: $allday"
 echo "duration: ${duration}$([ "$allday" = 'yes' ] && echo 'd' || echo 'm')"
+[ "$reminder" != "$default_reminder" ] && echo "reminder: $reminder"
 
 [ -n "$DRY_RUN" ] && exit
 
@@ -108,7 +122,7 @@ echo
 read -r -p "Add to Reminders?[Yn]" input
 if [ -z "$input" ] || [ "$input" = 'Y' ]
 then
-    gcalcli=(--calendar Reminders add --details all --title "$title" --when "$start" --duration "$duration" --reminder 30)
+    gcalcli=(--calendar Reminders add --details all --title "$title" --when "$start" --duration "$duration" --reminder "$reminder")
     [ -n "$allday" ] && gcalcli+=(--allday)
     gcalcli "${gcalcli[@]}"
 fi

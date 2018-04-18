@@ -20,7 +20,8 @@ test 'title: title
 start: 04/18/2018
 end: 04/18/2018
 allday: yes
-duration: 1d' title
+duration: 1d
+reminder: 10' 10r title
 
 test 'title: title
 start: 04/19/2018
