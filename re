@@ -78,7 +78,7 @@ do
     fi
 done
 
-start_datetime=($(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y %H:%M'))
+IFS=' ' read -r -a start_datetime <<< "$(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y %H:%M')"
 
 # end_date is not set
 [ -z "${DATETIME[4]}" ] && DATETIME[4]="${start_datetime[0]}"
@@ -94,7 +94,7 @@ start_datetime=($(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y %H:%M'))
     DATETIME[7]='0hour'
 }
 
-end_datetime=($(date -d "${DATETIME[*]:4:4}" '+%m/%d/%Y %H:%M'))
+IFS=' ' read -r -a end_datetime <<< "$(date -d "${DATETIME[*]:4:4}" '+%m/%d/%Y %H:%M')"
 
 if [ "${DATETIME[9]}" -eq 0 ]
 then
