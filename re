@@ -86,7 +86,6 @@ then
     end_epoch="$(date -d "$end" '+%s')"
     duration="$(((end_epoch - start_epoch) / 86400 + 1))"
 else
-    allday="no"
     start="$start_date $start_time"
     end="$end_date $end_time"
     start_epoch="$(date -d "$start" '+%s')"
@@ -100,7 +99,7 @@ echo "title: $title"
 # echo "datetime: ${DATETIME[*]}"
 echo "start: $start"
 echo "end: $end"
-echo "allday: $allday"
+[ -n "$allday" ] && echo "allday: $allday"
 echo "duration: ${duration}$([ "$allday" = 'yes' ] && echo 'd' || echo 'm')"
 
 [ -n "$DRY_RUN" ] && exit
@@ -109,5 +108,7 @@ echo
 read -r -p "Add to Reminders?[Yn]" input
 if [ -z "$input" ] || [ "$input" = 'Y' ]
 then
-    gcalcli --calendar Reminders add --details all --title "$title" --when "$start" --duration "$duration" --reminder 30 "$([ "$allday" = 'yes' ] && echo '--allday')"
+    gcalcli=(--calendar Reminders add --details all --title "$title" --when "$start" --duration "$duration" --reminder 30)
+    [ -n "$allday" ] && gcalcli+=(--allday)
+    gcalcli "${gcalcli[@]}"
 fi
