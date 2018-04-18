@@ -3,6 +3,15 @@
 default_duration='1hour'
 default_reminder='30m'
 
+duration() {
+    local start="$1"
+    local end="$2"
+    local start_epoch end_epoch
+    start_epoch="$(date -d "$start" '+%s')"
+    end_epoch="$(date -d "$end" '+%s')"
+    echo "$(((end_epoch - start_epoch) / 60))"
+}
+
 parse() {
     local index="$1"
     local regex="$2"
@@ -93,15 +102,12 @@ then
     allday="yes"
     start="${start_datetime[0]}"
     end="${end_datetime[0]}"
-    start_epoch="$(date -d "$start" '+%s')"
-    end_epoch="$(date -d "$end" '+%s')"
-    duration="$(((end_epoch - start_epoch) / 86400 + 1))"
+    duration="$(duration "$start" "$end")"
+    duration="$((duration / 1440 + 1))"
 else
     start="${start_datetime[*]:0:2}"
     end="${end_datetime[*]:0:2}"
-    start_epoch="$(date -d "$start" '+%s')"
-    end_epoch="$(date -d "$end" '+%s')"
-    duration="$(((end_epoch - start_epoch) / 60))"
+    duration="$(duration "$start" "$end")"
 fi
 
 title="${ARGS[*]}"
