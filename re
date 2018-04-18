@@ -69,14 +69,13 @@ do
     fi
 done
 
-start_date="$(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y')"
-start_time="$(date -d "${DATETIME[*]:0:4}" '+%H:%M')"
+start_datetime=($(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y %H:%M'))
 
 # end_date is not set
-[ -z "${DATETIME[4]}" ] && DATETIME[4]="$start_date"
+[ -z "${DATETIME[4]}" ] && DATETIME[4]="${start_datetime[0]}"
 # end_time is not set
 [ -z "${DATETIME[6]}" ] && {
-    DATETIME[6]="$start_time"
+    DATETIME[6]="${start_datetime[1]}"
     # end_time_relative is not set
     [ -z "${DATETIME[7]}" ] && DATETIME[7]="$default_duration"
 }
@@ -86,21 +85,20 @@ start_time="$(date -d "${DATETIME[*]:0:4}" '+%H:%M')"
     DATETIME[7]='0hour'
 }
 
-end_date="$(date -d "${DATETIME[*]:4:4}" '+%m/%d/%Y')"
-end_time="$(date -d "${DATETIME[*]:4:4}" '+%H:%M')"
+end_datetime=($(date -d "${DATETIME[*]:4:4}" '+%m/%d/%Y %H:%M'))
 
 if [ "${DATETIME[9]}" -eq 0 ]
 then
     # all day event
     allday="yes"
-    start="$start_date"
-    end="$end_date"
+    start="${start_datetime[0]}"
+    end="${end_datetime[0]}"
     start_epoch="$(date -d "$start" '+%s')"
     end_epoch="$(date -d "$end" '+%s')"
     duration="$(((end_epoch - start_epoch) / 86400 + 1))"
 else
-    start="$start_date $start_time"
-    end="$end_date $end_time"
+    start="${start_datetime[*]:0:2}"
+    end="${end_datetime[*]:0:2}"
     start_epoch="$(date -d "$start" '+%s')"
     end_epoch="$(date -d "$end" '+%s')"
     duration="$(((end_epoch - start_epoch) / 60))"
