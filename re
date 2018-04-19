@@ -12,6 +12,26 @@ duration() {
     echo "$(((end_epoch - start_epoch) / 60))"
 }
 
+duration_day() {
+    local duration
+    duration="$(duration "$@")"
+    echo "$((duration / 1440))"
+}
+
+duration_day_format() {
+    local duration_day
+    duration_day="$(duration_day "$@")"
+    if [ "$duration_day" -eq 0 ]
+    then
+        echo 'today'
+    elif [ "$duration_day" -gt 0 ]
+    then
+        echo "+${duration_day}d"
+    else
+        echo "${duration_day}d"
+    fi
+}
+
 parse() {
     local index="$1"
     local regex="$2"
@@ -78,7 +98,7 @@ do
     fi
 done
 
-IFS=' ' read -r -a start_datetime <<< "$(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y %H:%M')"
+IFS=' ' read -r -a start_datetime <<< "$(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y %H:%M %a')"
 
 # end_date is not set
 [ -z "${DATETIME[4]}" ] && DATETIME[4]="${start_datetime[0]}"
@@ -94,31 +114,36 @@ IFS=' ' read -r -a start_datetime <<< "$(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y
     DATETIME[7]='0hour'
 }
 
-IFS=' ' read -r -a end_datetime <<< "$(date -d "${DATETIME[*]:4:4}" '+%m/%d/%Y %H:%M')"
+IFS=' ' read -r -a end_datetime <<< "$(date -d "${DATETIME[*]:4:4}" '+%m/%d/%Y %H:%M %a')"
 
 if [ "${DATETIME[9]}" -eq 0 ]
 then
     # all day event
     allday="yes"
-    start="${start_datetime[0]}"
-    end="${end_datetime[0]}"
-    duration="$(duration "$start" "$end")"
-    duration="$((duration / 1440 + 1))"
+    when="${start_datetime[0]}"
+    duration="$(duration_day "${start_datetime[0]}" "${end_datetime[0]}")"
+    duration="$((duration + 1))"
 else
-    start="${start_datetime[*]:0:2}"
-    end="${end_datetime[*]:0:2}"
-    duration="$(duration "$start" "$end")"
+    when="${start_datetime[*]:0:2}"
+    duration="$(duration "${start_datetime[*]:0:2}" "${end_datetime[*]:0:2}")"
 fi
+
+start_offset="$(duration_day_format '00:00' "${start_datetime[0]}")"
+end_offset="$(duration_day_format "${start_datetime[0]}" "${end_datetime[0]}")"
 
 title="${ARGS[*]}"
 
-echo "title: $title"
+echo "     title: $title"
 # echo "datetime: ${DATETIME[*]}"
-echo "start: $start"
-echo "end: $end"
-[ -n "$allday" ] && echo "allday: $allday"
-echo "duration: ${duration}$([ "$allday" = 'yes' ] && echo 'd' || echo 'm')"
-[ "$reminder" != "$default_reminder" ] && echo "reminder: $reminder"
+# echo "start_datetime: ${start_datetime[*]}"
+# echo "end_datetime: ${end_datetime[*]}"
+echo "start_date: ${start_datetime[0]} (${start_offset}, ${start_datetime[2]})"
+[ -z "$allday" ] && echo "start_time: ${start_datetime[1]}"
+[ "${start_datetime[0]}" != "${end_datetime[0]}" ] && echo "  end_date: ${end_datetime[0]} (${end_offset}, ${end_datetime[2]})"
+[ -z "$allday" ] && echo "  end_time: ${end_datetime[1]}"
+[ -n "$allday" ] && echo "    allday: $allday"
+echo "  duration: ${duration}$([ "$allday" = 'yes' ] && echo 'd' || echo 'm')"
+[ "$reminder" != "$default_reminder" ] && echo "  reminder: $reminder"
 
 [ -n "$DRY_RUN" ] && exit
 
@@ -126,7 +151,7 @@ echo
 read -r -p "Add to Reminders?[Yn]" input
 if [ -z "$input" ] || [ "$input" = 'Y' ]
 then
-    gcalcli=(--calendar Reminders add --details all --title "$title" --when "$start" --duration "$duration" --reminder "$reminder")
+    gcalcli=(--calendar Reminders add --details all --title "$title" --when "$when" --duration "$duration" --reminder "$reminder")
     [ -n "$allday" ] && gcalcli+=(--allday)
     gcalcli "${gcalcli[@]}"
 fi
