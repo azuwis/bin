@@ -1,25 +1,31 @@
 #!/bin/bash
 
+if [ "$1" = '-g' ]
+then
+    GEN='yes'
+fi
+
 pass=0
 fail=0
 test() {
     expected="$1"
     shift
     got="$(faketime '2018-04-18 15:44' re -n "$@")"
-    if [ "$expected" != "$got" ]
+    if [ -n "$GEN" ]
     then
-        fail="$((fail+1))"
-        echo "fail: $@"
+        echo "test '$got' $@"
         echo
-        echo "expected:"
-        echo
-        echo "$expected"
-        echo "got:"
-        echo
-        echo "$got"
     else
-        pass="$((pass+1))"
-        echo "pass: $@"
+        if [ "$expected" != "$got" ]
+        then
+            fail="$((fail+1))"
+            echo "fail: $@"
+            wdiff -a <(echo "$expected") <(echo "$got")
+            echo '--------'
+        else
+            pass="$((pass+1))"
+            echo "pass: $@"
+        fi
     fi
 }
 
@@ -135,5 +141,8 @@ start: 04/19/2018 17:44
 end: 04/21/2018 08:30
 duration: 2326m' d 4/21 2h 830 title
 
-echo
-echo "pass: $pass, fail: $fail"
+if [ -z "$GEN" ]
+then
+    echo
+    echo "pass: $pass, fail: $fail"
+fi
