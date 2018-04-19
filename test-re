@@ -10,7 +10,7 @@ fail=0
 test() {
     expected="$1"
     shift
-    got="$(faketime '2018-04-18 15:44' re -n "$@")"
+    got="$(faketime '2018-04-20 14:38' re -n "$@")"
     if [ -n "$GEN" ]
     then
         echo "test '$got' $@"
@@ -29,117 +29,133 @@ test() {
     fi
 }
 
-test 'title: title
-start: 04/18/2018
-end: 04/18/2018
-allday: yes
-duration: 1d
-reminder: 10' 10r title
+test '     title: title
+start_date: 04/20/2018 (today, Fri)
+    allday: yes
+  duration: 1d
+  reminder: 10' 10r title
 
-test 'title: title
-start: 04/19/2018
-end: 04/19/2018
-allday: yes
-duration: 1d' d title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+    allday: yes
+  duration: 1d' d title
 
-test 'title: title
-start: 04/21/2018
-end: 04/21/2018
-allday: yes
-duration: 1d' 4/21 title
+test '     title: title
+start_date: 04/23/2018 (+3d, Mon)
+    allday: yes
+  duration: 1d' 4/23 title
 
-test 'title: title
-start: 04/18/2018 17:44
-end: 04/18/2018 18:44
-duration: 60m' 2h title
+test '     title: title
+start_date: 04/20/2018 (today, Fri)
+start_time: 16:38
+  end_time: 17:38
+  duration: 60m' 2h title
 
-test 'title: title
-start: 04/18/2018 08:30
-end: 04/18/2018 09:30
-duration: 60m' 830 title
+test '     title: title
+start_date: 04/20/2018 (today, Fri)
+start_time: 08:30
+  end_time: 09:30
+  duration: 60m' 830 title
 
-test 'title: title
-start: 04/19/2018 17:44
-end: 04/20/2018 23:59
-duration: 1815m' d d 2h title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+start_time: 16:38
+  end_date: 04/22/2018 (+1d, Sun)
+  end_time: 23:59
+  duration: 1881m' d d 2h title
 
-test 'title: title
-start: 04/19/2018
-end: 04/20/2018
-allday: yes
-duration: 2d' d d title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+  end_date: 04/23/2018 (+2d, Mon)
+    allday: yes
+  duration: 3d' d 2d title
 
-test 'title: title
-start: 04/19/2018
-end: 04/21/2018
-allday: yes
-duration: 3d' d 4/21 title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+  end_date: 04/24/2018 (+3d, Tue)
+    allday: yes
+  duration: 4d' d 4/24 title
 
-test 'title: title
-start: 04/19/2018 17:44
-end: 04/19/2018 18:44
-duration: 60m' d 2h title
+test '     title: title
+start_date: 04/22/2018 (+2d, Sun)
+start_time: 08:38
+  end_time: 09:38
+  duration: 60m' d 18h title
 
-test 'title: title
-start: 04/19/2018 08:30
-end: 04/19/2018 09:30
-duration: 60m' d 830 title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+start_time: 08:30
+  end_time: 09:30
+  duration: 60m' d 830 title
 
-test 'title: title
-start: 04/20/2018
-end: 04/22/2018
-allday: yes
-duration: 3d' 4/20 4/22 title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+  end_date: 04/24/2018 (+3d, Tue)
+    allday: yes
+  duration: 4d' 4/21 4/24 title
 
-test 'title: title
-start: 04/20/2018 17:44
-end: 04/20/2018 18:44
-duration: 60m' 4/20 2h title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+start_time: 16:38
+  end_time: 17:38
+  duration: 60m' 4/21 2h title
 
-test 'title: title
-start: 04/20/2018 08:30
-end: 04/20/2018 09:30
-duration: 60m' 4/20 830 title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+start_time: 08:30
+  end_time: 09:30
+  duration: 60m' 4/21 830 title
 
-test 'title: title
-start: 04/18/2018 17:44
-end: 04/18/2018 19:44
-duration: 120m' 2h 2h title
+test '     title: title
+start_date: 04/20/2018 (today, Fri)
+start_time: 16:38
+  end_time: 18:38
+  duration: 120m' 2h 2h title
 
-test 'title: title
-start: 04/18/2018 17:44
-end: 04/18/2018 20:00
-duration: 136m' 2h 20 title
+test '     title: title
+start_date: 04/20/2018 (today, Fri)
+start_time: 16:38
+  end_time: 20:00
+  duration: 202m' 2h 20 title
 
-test 'title: title
-start: 04/18/2018 08:30
-end: 04/18/2018 09:30
-duration: 60m' 830 930 title
+test '     title: title
+start_date: 04/20/2018 (today, Fri)
+start_time: 08:30
+  end_time: 09:30
+  duration: 60m' 830 930 title
 
-test 'title: title
-start: 04/21/2018 17:44
-end: 04/21/2018 20:00
-duration: 136m' 4/21 2h 20 title
+test '     title: title
+start_date: 04/22/2018 (+2d, Sun)
+start_time: 16:38
+  end_time: 20:00
+  duration: 202m' 4/22 2h 20 title
 
-test 'title: title
-start: 04/19/2018 17:44
-end: 04/19/2018 20:00
-duration: 136m' d 2h 20 title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+start_time: 16:38
+  end_time: 20:00
+  duration: 202m' d 2h 20 title
 
-test 'title: title
-start: 04/19/2018 08:30
-end: 04/21/2018 23:59
-duration: 3809m' d 4/21 830 title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+start_time: 08:30
+  end_date: 04/22/2018 (+1d, Sun)
+  end_time: 23:59
+  duration: 2369m' d 4/22 830 title
 
-test 'title: title
-start: 04/19/2018 17:44
-end: 04/21/2018 23:59
-duration: 3255m' d 4/21 2h title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+start_time: 16:38
+  end_date: 04/22/2018 (+1d, Sun)
+  end_time: 23:59
+  duration: 1881m' d 4/22 2h title
 
-test 'title: title
-start: 04/19/2018 17:44
-end: 04/21/2018 08:30
-duration: 2326m' d 4/21 2h 830 title
+test '     title: title
+start_date: 04/21/2018 (+1d, Sat)
+start_time: 16:38
+  end_date: 04/22/2018 (+1d, Sun)
+  end_time: 08:30
+  duration: 952m' d 4/22 2h 830 title
 
 if [ -z "$GEN" ]
 then
