@@ -5,6 +5,15 @@ then
     GEN='yes'
 fi
 
+finish() {
+    if [ -z "$GEN" ]
+    then
+        echo
+        echo "pass: $pass, fail: $fail"
+    fi
+}
+trap finish EXIT
+
 pass=0
 fail=0
 test() {
@@ -28,8 +37,6 @@ test() {
         fi
     fi
 }
-
-##### Test start
 
 test '  DATETIME: 04/20/2018 0day 14:38 0hour 04/20/2018 0day 14:38 1hour 0 0
      start: 04/20/2018 14:38 Fri today
@@ -221,11 +228,3 @@ start_time: 16:38
   end_date: 04/22/2018 (+1d, Sun)
   end_time: 08:30
   duration: 952m' d 4/22 2h 830 title
-
-##### Test end
-
-if [ -z "$GEN" ]
-then
-    echo
-    echo "pass: $pass, fail: $fail"
-fi
