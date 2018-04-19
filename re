@@ -98,13 +98,13 @@ do
     fi
 done
 
-IFS=' ' read -r -a start_datetime <<< "$(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y %H:%M %a')"
+IFS=' ' read -r -a start <<< "$(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y %H:%M %a')"
 
 # end_date is not set
-[ -z "${DATETIME[4]}" ] && DATETIME[4]="${start_datetime[0]}"
+[ -z "${DATETIME[4]}" ] && DATETIME[4]="${start[0]}"
 # end_time is not set
 [ -z "${DATETIME[6]}" ] && {
-    DATETIME[6]="${start_datetime[1]}"
+    DATETIME[6]="${start[1]}"
     # end_time_relative is not set
     [ -z "${DATETIME[7]}" ] && DATETIME[7]="$default_duration"
 }
@@ -114,33 +114,33 @@ IFS=' ' read -r -a start_datetime <<< "$(date -d "${DATETIME[*]:0:4}" '+%m/%d/%Y
     DATETIME[7]='0hour'
 }
 
-IFS=' ' read -r -a end_datetime <<< "$(date -d "${DATETIME[*]:4:4}" '+%m/%d/%Y %H:%M %a')"
+IFS=' ' read -r -a end <<< "$(date -d "${DATETIME[*]:4:4}" '+%m/%d/%Y %H:%M %a')"
 
 if [ "${DATETIME[9]}" -eq 0 ]
 then
     # all day event
     allday="yes"
-    when="${start_datetime[0]}"
-    duration="$(duration_day "${start_datetime[0]}" "${end_datetime[0]}")"
+    when="${start[0]}"
+    duration="$(duration_day "${start[0]}" "${end[0]}")"
     duration="$((duration + 1))"
 else
-    when="${start_datetime[*]:0:2}"
-    duration="$(duration "${start_datetime[*]:0:2}" "${end_datetime[*]:0:2}")"
+    when="${start[*]:0:2}"
+    duration="$(duration "${start[*]:0:2}" "${end[*]:0:2}")"
 fi
 
-start_offset="$(duration_day_format '00:00' "${start_datetime[0]}")"
-end_offset="$(duration_day_format "${start_datetime[0]}" "${end_datetime[0]}")"
+start_offset="$(duration_day_format '00:00' "${start[0]}")"
+end_offset="$(duration_day_format "${start[0]}" "${end[0]}")"
 
 title="${ARGS[*]}"
 
 echo "     title: $title"
 # echo "datetime: ${DATETIME[*]}"
-# echo "start_datetime: ${start_datetime[*]}"
-# echo "end_datetime: ${end_datetime[*]}"
-echo "start_date: ${start_datetime[0]} (${start_offset}, ${start_datetime[2]})"
-[ -z "$allday" ] && echo "start_time: ${start_datetime[1]}"
-[ "${start_datetime[0]}" != "${end_datetime[0]}" ] && echo "  end_date: ${end_datetime[0]} (${end_offset}, ${end_datetime[2]})"
-[ -z "$allday" ] && echo "  end_time: ${end_datetime[1]}"
+# echo "start: ${start[*]}"
+# echo "end: ${end[*]}"
+echo "start_date: ${start[0]} (${start_offset}, ${start[2]})"
+[ -z "$allday" ] && echo "start_time: ${start[1]}"
+[ "${start[0]}" != "${end[0]}" ] && echo "  end_date: ${end[0]} (${end_offset}, ${end[2]})"
+[ -z "$allday" ] && echo "  end_time: ${end[1]}"
 [ -n "$allday" ] && echo "    allday: $allday"
 echo "  duration: ${duration}$([ "$allday" = 'yes' ] && echo 'd' || echo 'm')"
 [ "$reminder" != "$default_reminder" ] && echo "  reminder: $reminder"
