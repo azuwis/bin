@@ -133,10 +133,12 @@ end[3]="$(duration_day_format "${start[0]}" "${end[0]}")"
 
 title="${ARGS[*]}"
 
+[ -n "$DRY_RUN" ] && {
+    echo "  DATETIME: ${DATETIME[*]}"
+    echo "     start: ${start[*]}"
+    echo "       end: ${end[*]}"
+}
 echo "     title: $title"
-# echo "datetime: ${DATETIME[*]}"
-# echo "start: ${start[*]}"
-# echo "end: ${end[*]}"
 echo "start_date: ${start[0]} (${start[3]}, ${start[2]})"
 [ -z "$allday" ] && echo "start_time: ${start[1]}"
 [ "${start[0]}" != "${end[0]}" ] && echo "  end_date: ${end[0]} (${end[3]}, ${end[2]})"

@@ -29,133 +29,200 @@ test() {
     fi
 }
 
-test '     title: title
+##### Test start
+
+test '  DATETIME: 04/20/2018 0day 14:38 0hour 04/20/2018 0day 14:38 1hour 0 0
+     start: 04/20/2018 14:38 Fri today
+       end: 04/20/2018 15:38 Fri today
+     title: title
 start_date: 04/20/2018 (today, Fri)
     allday: yes
   duration: 1d
   reminder: 10' 10r title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 14:38 0hour 04/21/2018 0day 14:38 1hour 4 0
+     start: 04/21/2018 14:38 Sat +1d
+       end: 04/21/2018 15:38 Sat today
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
     allday: yes
   duration: 1d' d title
 
-test '     title: title
+test '  DATETIME: 4/23 0day 14:38 0hour 04/23/2018 0day 14:38 1hour 4 0
+     start: 04/23/2018 14:38 Mon +3d
+       end: 04/23/2018 15:38 Mon today
+     title: title
 start_date: 04/23/2018 (+3d, Mon)
     allday: yes
   duration: 1d' 4/23 title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 0day 14:38 2hour 04/20/2018 0day 16:38 1hour 0 4
+     start: 04/20/2018 16:38 Fri today
+       end: 04/20/2018 17:38 Fri today
+     title: title
 start_date: 04/20/2018 (today, Fri)
 start_time: 16:38
   end_time: 17:38
   duration: 60m' 2h title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 0day 830 0hour 04/20/2018 0day 08:30 1hour 0 4
+     start: 04/20/2018 08:30 Fri today
+       end: 04/20/2018 09:30 Fri today
+     title: title
 start_date: 04/20/2018 (today, Fri)
 start_time: 08:30
   end_time: 09:30
   duration: 60m' 830 title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 14:38 2hour 04/21/2018 day 23:59 0hour 8 4
+     start: 04/21/2018 16:38 Sat +1d
+       end: 04/22/2018 23:59 Sun +1d
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
 start_time: 16:38
   end_date: 04/22/2018 (+1d, Sun)
   end_time: 23:59
   duration: 1881m' d d 2h title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 14:38 0hour 04/21/2018 2day 14:38 1hour 8 0
+     start: 04/21/2018 14:38 Sat +1d
+       end: 04/23/2018 15:38 Mon +2d
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
   end_date: 04/23/2018 (+2d, Mon)
     allday: yes
   duration: 3d' d 2d title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 14:38 0hour 4/24 0day 14:38 1hour 8 0
+     start: 04/21/2018 14:38 Sat +1d
+       end: 04/24/2018 15:38 Tue +3d
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
   end_date: 04/24/2018 (+3d, Tue)
     allday: yes
   duration: 4d' d 4/24 title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 14:38 18hour 04/22/2018 0day 08:38 1hour 4 4
+     start: 04/22/2018 08:38 Sun +2d
+       end: 04/22/2018 09:38 Sun today
+     title: title
 start_date: 04/22/2018 (+2d, Sun)
 start_time: 08:38
   end_time: 09:38
   duration: 60m' d 18h title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 830 0hour 04/21/2018 0day 08:30 1hour 4 4
+     start: 04/21/2018 08:30 Sat +1d
+       end: 04/21/2018 09:30 Sat today
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
 start_time: 08:30
   end_time: 09:30
   duration: 60m' d 830 title
 
-test '     title: title
+test '  DATETIME: 4/21 0day 14:38 0hour 4/24 0day 14:38 1hour 8 0
+     start: 04/21/2018 14:38 Sat +1d
+       end: 04/24/2018 15:38 Tue +3d
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
   end_date: 04/24/2018 (+3d, Tue)
     allday: yes
   duration: 4d' 4/21 4/24 title
 
-test '     title: title
+test '  DATETIME: 4/21 0day 14:38 2hour 04/21/2018 0day 16:38 1hour 4 4
+     start: 04/21/2018 16:38 Sat +1d
+       end: 04/21/2018 17:38 Sat today
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
 start_time: 16:38
   end_time: 17:38
   duration: 60m' 4/21 2h title
 
-test '     title: title
+test '  DATETIME: 4/21 0day 830 0hour 04/21/2018 0day 08:30 1hour 4 4
+     start: 04/21/2018 08:30 Sat +1d
+       end: 04/21/2018 09:30 Sat today
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
 start_time: 08:30
   end_time: 09:30
   duration: 60m' 4/21 830 title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 0day 14:38 2hour 04/20/2018 0day 16:38 2hour 0 8
+     start: 04/20/2018 16:38 Fri today
+       end: 04/20/2018 18:38 Fri today
+     title: title
 start_date: 04/20/2018 (today, Fri)
 start_time: 16:38
   end_time: 18:38
   duration: 120m' 2h 2h title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 0day 14:38 2hour 04/20/2018 0day 20  0 8
+     start: 04/20/2018 16:38 Fri today
+       end: 04/20/2018 20:00 Fri today
+     title: title
 start_date: 04/20/2018 (today, Fri)
 start_time: 16:38
   end_time: 20:00
   duration: 202m' 2h 20 title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 0day 830 0hour 04/20/2018 0day 930  0 8
+     start: 04/20/2018 08:30 Fri today
+       end: 04/20/2018 09:30 Fri today
+     title: title
 start_date: 04/20/2018 (today, Fri)
 start_time: 08:30
   end_time: 09:30
   duration: 60m' 830 930 title
 
-test '     title: title
+test '  DATETIME: 4/22 0day 14:38 2hour 04/22/2018 0day 20  4 8
+     start: 04/22/2018 16:38 Sun +2d
+       end: 04/22/2018 20:00 Sun today
+     title: title
 start_date: 04/22/2018 (+2d, Sun)
 start_time: 16:38
   end_time: 20:00
   duration: 202m' 4/22 2h 20 title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 14:38 2hour 04/21/2018 0day 20  4 8
+     start: 04/21/2018 16:38 Sat +1d
+       end: 04/21/2018 20:00 Sat today
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
 start_time: 16:38
   end_time: 20:00
   duration: 202m' d 2h 20 title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 830 0hour 4/22 0day 23:59 0hour 8 4
+     start: 04/21/2018 08:30 Sat +1d
+       end: 04/22/2018 23:59 Sun +1d
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
 start_time: 08:30
   end_date: 04/22/2018 (+1d, Sun)
   end_time: 23:59
   duration: 2369m' d 4/22 830 title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 14:38 2hour 4/22 0day 23:59 0hour 8 4
+     start: 04/21/2018 16:38 Sat +1d
+       end: 04/22/2018 23:59 Sun +1d
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
 start_time: 16:38
   end_date: 04/22/2018 (+1d, Sun)
   end_time: 23:59
   duration: 1881m' d 4/22 2h title
 
-test '     title: title
+test '  DATETIME: 04/20/2018 day 14:38 2hour 4/22 0day 830  8 8
+     start: 04/21/2018 16:38 Sat +1d
+       end: 04/22/2018 08:30 Sun +1d
+     title: title
 start_date: 04/21/2018 (+1d, Sat)
 start_time: 16:38
   end_date: 04/22/2018 (+1d, Sun)
   end_time: 08:30
   duration: 952m' d 4/22 2h 830 title
+
+##### Test end
 
 if [ -z "$GEN" ]
 then
