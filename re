@@ -1,7 +1,7 @@
 #!/bin/bash
 
 default_duration='1hour'
-default_reminder='30m'
+default_reminder='15m'
 
 duration() {
     local start="$1"
