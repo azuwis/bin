@@ -1,0 +1,5 @@
+#!/bin/sh
+hexdump -ve '"@" 48/1 "%02X" "\n" 6/1 "%02X" "\n" "@" 4/1 "%02X" "\n" 6/1 "%02X" "\n"' "$@" \
+  | grep -v '^@' \
+  | sort | uniq \
+  | grep -vE '^(FFFFFFFFFFFF|A0A1A2A3A4A5|D3F7D3F7D3F7)$'
