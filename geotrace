@@ -8,7 +8,7 @@ do
         if [ -n "$ip" ]
         then
             printf " | "
-            geoiplookup "$ip" | sed 's/^GeoIP ASNum Edition: [^ ]\+ /@@, /' | awk -F', ' -vORS=', ' '/^GeoIP Country Edition/ {print $2} /^GeoIP City Edition/ {print $4, $5} /^@@/ {printf $2}'
+            geoiplookup "$ip" | sed 's/^GeoIP ASNum Edition: [^ ]\+ /@@, /' | awk -F', ' -vORS=', ' '/^GeoIP Country Edition/ {print $2} /^GeoIP City Edition/ {print $4, $5} /^@@/ {$1=""; printf substr($0,2)}'
         fi
     fi
     echo
