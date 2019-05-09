@@ -1,0 +1,17 @@
+#!/bin/sh
+summary="$1"
+body="$2"
+id="${3:-0}"
+timeout="${4:-1200}"
+gdbus call --session \
+      --dest org.freedesktop.Notifications \
+      --object-path /org/freedesktop/Notifications \
+      --method org.freedesktop.Notifications.Notify \
+      Adjust \
+      "$id" \
+      '' \
+      "$summary" \
+      "$body" \
+      '[]' \
+      '{}' \
+      "$timeout"
