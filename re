@@ -154,7 +154,7 @@ echo
 read -r -p "Add to Reminders?[Yn]" input
 if [ -z "$input" ] || [ "$input" = 'Y' ]
 then
-    gcalcli=(--calendar Reminders add --details longurl --title "$title" --when "$when" --duration "$duration" --reminder "$reminder")
+    gcalcli=(--calendar Reminders add --details longurl --title "$title" --when "$when" --duration "$duration" --where '' --reminder "$reminder")
     [ -n "$allday" ] && gcalcli+=(--allday)
     gcalcli "${gcalcli[@]}"
 fi
