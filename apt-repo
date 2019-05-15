@@ -1,0 +1,56 @@
+#!/bin/bash
+set -e
+
+cd ~/debian
+
+if [ ! -e apt-ftparchive.conf ]; then
+cat > apt-ftparchive.conf <<EOF
+APT::FTPArchive::Release {
+  Origin "Azuwis";
+  Label "Azuwis";
+  Suite "unstable";
+  Codename "sid";
+  Architectures "amd64";
+  Components "main";
+};
+
+Dir {
+  ArchiveDir ".";
+  CacheDir ".";
+};
+
+Default {
+  Packages::Compress ". gzip xz";
+  Sources::Compress ". gzip xz";
+  Contents::Compress ". gzip xz";
+};
+
+BinDirectory "pool/main" {
+  Packages "dists/sid/main/binary-amd64/Packages";
+}
+EOF
+fi
+
+mkdir -p dists/sid/main/binary-amd64/
+apt-ftparchive generate apt-ftparchive.conf
+apt-ftparchive release --config-file apt-ftparchive.conf dists/sid | gpg --yes --clearsign -o dists/sid/InRelease
+
+if [ ! -e .git ]; then
+  git init
+  git checkout -b gh-pages
+  git add dists pool
+  git commit -m 'Update'
+  git remote add origin https://github.com/azuwis/debian.git
+  git push -f -u origin gh-pages
+else
+  git add dists pool
+  if [ "$(git status --porcelain dists pool | grep -cEv '/(InRelease|Release|Release.gpg)$')" -gt 0 ]; then
+    # git commit --amend --no-edit
+    git commit -m 'Update'
+    git reflog expire --expire=now --all
+    git gc --prune=now --aggressive
+    git push --force
+  else
+      git reset --hard
+  fi
+fi
