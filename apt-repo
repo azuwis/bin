@@ -3,7 +3,7 @@ set -e
 
 cd ~/debian
 
-if [ ! -e apt-ftparchive.conf ]; then
+if [ ! -e apt-ftparchive.conf ] || [ apt-ftparchive.conf -ot "$0" ]; then
 cat > apt-ftparchive.conf <<EOF
 APT::FTPArchive::Release {
   Origin "Azuwis";
