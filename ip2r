@@ -1,0 +1,43 @@
+#!/bin/sh
+
+usage() {
+    cmd=$(basename "$0")
+    cat <<EOF >&2
+USAGE: $cmd -h|--help
+       $cmd <ip> ...
+       $cmd mtr [options ...] <ip>            => mtr -n -r [options ...] <ip> | $cmd
+       $cmd tr|traceroute [options ...] <ip>  => traceroute -n [options ...] <ip> | $cmd
+       tail access.log | geo
+EOF
+    exit 1
+}
+
+if [ -t 0 ];
+then
+    case "$1" in
+        mtr)
+            shift
+            mtr -n -r "$@" | ip2region
+            ;;
+        tr|traceroute)
+            shift
+            traceroute -n "$@" | ip2region
+            ;;
+        '')
+            cat <<EOF >&2
+Input IP, Ctrl-C to exit:
+EOF
+            ip2region
+            ;;
+        -h|--help)
+            usage
+            ;;
+        *)
+            IFS='
+'
+            echo "$*" | ip2region
+            ;;
+    esac
+else
+    ip2region
+fi
