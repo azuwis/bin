@@ -5,8 +5,8 @@ usage() {
     cat <<EOF >&2
 USAGE: $cmd -h|--help
        $cmd <ip> ...
-       $cmd mtr [options ...] <ip>            => mtr -n -r [options ...] <ip> | geo
-       $cmd tr|traceroute [options ...] <ip>  => traceroute -n [options ...] <ip> | geo
+       $cmd mtr [options ...] <ip>            => mtr -n -r [options ...] <ip> | $cmd
+       $cmd tr|traceroute [options ...] <ip>  => traceroute -n [options ...] <ip> | $cmd
        tail access.log | geo
 EOF
     exit 1
