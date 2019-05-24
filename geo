@@ -52,7 +52,7 @@ EOF
         *)
             IFS='
 '
-            echo "$*" | geo
+            echo "$*" | geoip
             ;;
     esac
 else
