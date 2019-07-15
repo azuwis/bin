@@ -7,7 +7,7 @@ USAGE: $cmd -h|--help
        $cmd <ip> ...
        $cmd mtr [options ...] <ip>            => mtr -n -r [options ...] <ip> | $cmd
        $cmd tr|traceroute [options ...] <ip>  => traceroute -n [options ...] <ip> | $cmd
-       tail access.log | geo
+       tail access.log | ip2r
 EOF
     exit 1
 }
