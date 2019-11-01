@@ -21,7 +21,7 @@ import curses
 import subprocess
 
 # where things get auto mounted
-MOUNT_PATH = '/media'
+MOUNT_PATH = '/media/azuwis'
 # exclude these guys from the list
 EXCLUDES = ('.hal-mtab', '.hal-mtab-lock', 'cdrom0', 'cdrom1')
 # the unmount command
