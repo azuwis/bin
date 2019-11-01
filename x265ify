@@ -1,0 +1,24 @@
+#!/bin/sh
+set -u
+
+convert() {
+  input="$1"
+  tmp="${input%.mp4}_x265_tmp.mp4"
+  output="${input%.mp4}_x265.mp4"
+  if [ -n "${input##*_x265.mp4}" ] && [ ! -e "$output" ]
+  then
+    echo "$input"
+    if ffmpeg -i "$input" -map_metadata 0:g -c:v libx265 -crf 28 -c:a copy "$tmp"
+    then
+      touch -r "$input" "$tmp"
+      mv "$tmp" "$output"
+    else
+      echo "$input" >> error.log
+    fi
+  fi
+}
+
+for i in "$@"
+do
+  convert "$i"
+done
