@@ -1,2 +1,17 @@
 #!/bin/sh
+
+# apt-get install kvmtool
+
+if [ ! -e openwrt-x86-64-vmlinuz ]
+then
+  wget https://downloads.openwrt.org/snapshots/targets/x86/64/openwrt-x86-64-vmlinuz
+fi
+if [ ! -e openwrt-x86-64-rootfs-ext4.img.gz ]
+then
+  wget https://downloads.openwrt.org/snapshots/targets/x86/64/openwrt-x86-64-rootfs-ext4.img.gz
+fi
+if [ ! -e openwrt-x86-64-rootfs-ext4.img ]
+then
+  gzip -d -k openwrt-x86-64-rootfs-ext4.img.gz
+fi
 sudo lkvm run --kernel openwrt-x86-64-vmlinuz --disk openwrt-x86-64-rootfs-ext4.img --network host_ip=192.168.1.2
