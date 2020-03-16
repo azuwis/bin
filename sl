@@ -10,5 +10,5 @@ export all_proxy=socks5://127.0.0.1:1080 http_proxy=http://127.0.0.1:8123 https_
 
 EOF
 
-[ -x /usr/bin/polipo ] && polipo -c /dev/null diskCacheRoot= localDocumentRoot= socksParentProxy=127.0.0.1:1080 &
+[ -x /usr/bin/tinyproxy ] && tinyproxy -d -c ~/.config/tinyproxy.conf &
 ss-local -v -c /etc/shadowsocks-libev/redir.json -l 1080 -b 127.0.0.1
