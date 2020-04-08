@@ -1,0 +1,9 @@
+#!/bin/sh
+# apt-get install python3.7-dev python3.7-venv portaudio19-dev
+# python3.7 -m venv ~/bin/magenta
+# source ~/bin/magenta/bin/activate
+# pip3 install magenta
+# wget https://storage.googleapis.com/magentadata/models/onsets_frames_transcription/maestro_checkpoint.zip
+# unzip -d ~/bin/magenta maestro_checkpoint.zip
+
+~/bin/magenta/bin/onsets_frames_transcription_transcribe --hparams=use_cudnn=false --model_dir=~/bin/magenta/train "$@"
