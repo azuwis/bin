@@ -5,7 +5,7 @@ usage() {
     cat <<EOF >&2
 USAGE: $cmd -h|--help
        $cmd <ip> ...
-       $cmd mtr [options ...] <ip>            => mtr -n -r [options ...] <ip> | $cmd
+       $cmd mtr [options ...] <ip>            => mtr -z -n -r [options ...] <ip> | $cmd
        $cmd tr|traceroute [options ...] <ip>  => traceroute -n [options ...] <ip> | $cmd
        tail access.log | geo
 EOF
@@ -34,7 +34,7 @@ then
     case "$1" in
         mtr)
             shift
-            mtr -n -r "$@" | geoip
+            mtr -z -n -r "$@" | geoip
             ;;
         tr|traceroute)
             shift

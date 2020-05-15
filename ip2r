@@ -17,7 +17,7 @@ then
     case "$1" in
         mtr)
             shift
-            mtr -n -r "$@" | ip2region
+            mtr -z -n -r "$@" | ip2region
             ;;
         tr|traceroute)
             shift
