@@ -1,0 +1,16 @@
+#!/bin/bash
+# https://stackoverflow.com/questions/28832219/can-i-hide-commits-time-when-i-push-to-github/52887876#52887876
+if [ -z "${GIT_COMMITTER_DATE:-}" ]; then
+  last_git_time="$(git log --date=format:'%H:%M:%S' --format='%ad' -n 1 --skip 1)"
+  last_git_date="$(git log --date=format:'%Y-%m-%d' --format='%ad' -n 1 --skip 1)"
+  today="$(date '+%Y-%m-%d')"
+  if [ "$last_git_date" = "$today" ]; then
+    new_time="${last_git_time}"
+  else
+    new_time="19:00:00"
+  fi
+  new_delta=" $((RANDOM % 600)) second"
+  d="$(date --date "${today}T${new_time}${new_delta}" --iso-8601=seconds)"
+  #echo "$d"
+  GIT_COMMITTER_DATE="$d" git commit --amend --date "$d" --no-edit
+fi
