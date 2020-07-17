@@ -1,0 +1,26 @@
+#!/bin/sh
+
+apm() {
+    aseqdump -p 'Digital Piano' | grep -c 'Note on' &
+    sleep 10
+    pkill -x aseqdump
+    sleep 10
+}
+
+dot() {
+    for k in 1 2 3
+    do
+        printf '.'
+        sleep 1
+    done
+}
+
+for i in r l
+do
+    for j in 45 34 23 12
+    do
+        printf '%s%s' "$i" "$j"
+        dot
+        apm
+    done
+done | tee ~/src/piano-trill/"$(date +%Y%m%d-%H%M%S)"
