@@ -1,0 +1,4 @@
+#!/bin/bash
+iface="$1"
+source <(udevadm test-builtin net_id "/sys/class/net/$iface" 2>/dev/null | grep '^ID_NET_NAME_')
+echo "${ID_NET_NAME_ONBOARD:-${ID_NET_NAME_SLOT:-${ID_NET_NAME_PATH:-${ID_NET_NAME_MAC:-${iface}}}}}"
