@@ -1,0 +1,3 @@
+#!/bin/bash
+read -r X Y W H G ID < <(slop -k -o -f "%x %y %w %h %g %i")
+ffmpeg -f x11grab -draw_mouse 0 -s "$W"x"$H" -i :0.0+$X,$Y -c:v libx264 -preset ultrafast -crf 0 /tmp/scr.mkv
