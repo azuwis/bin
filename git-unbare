@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+git config --file=.git/config core.bare false
+git config --file=.git/config core.logallrefupdates true
+git config --file=.git/config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+git fetch origin
+git branch --set-upstream-to=origin/master master
+git reset HEAD -- .
