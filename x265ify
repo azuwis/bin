@@ -8,7 +8,7 @@ convert() {
   if [ -n "${input##*_x265.mp4}" ] && [ ! -e "$output" ]
   then
     echo "$input"
-    if ffmpeg -i "$input" -map_metadata 0:g -c:v libx265 -crf 28 -c:a copy "$tmp"
+    if ffmpeg -i "$input" -map_metadata 0:g -c:v libx265 -crf 28 -c:a aac "$tmp"
     then
       touch -r "$input" "$tmp"
       mv "$tmp" "$output"
