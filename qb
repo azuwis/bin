@@ -1,0 +1,13 @@
+#!/bin/sh
+torrent="$1"
+category="$2"
+scp "$torrent" nuc:/tmp/qb.torrent
+torrent="/tmp/qb.torrent"
+#ssh nuc transmission-edit -r https:// http:// "$torrent"
+ssh nuc chmod 644 "$torrent"
+if [ -n "$category" ]
+then
+  category="--category=$category"
+fi
+ssh nuc sudo -u torrent qbittorrent-nox --sequential --first-and-last "$category" "$torrent"
+ssh nuc rm "$torrent"
