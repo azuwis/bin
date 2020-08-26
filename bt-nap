@@ -29,7 +29,7 @@ if [ x"$1" = x"off" ]; then
     echo ""
     echo "ifdown bnep0"
     echo ""
-    sudo ifdown bnep0
+    #sudo ifdown bnep0
     echo ""
     for i in $(seq 0 "$((number_of_nap-1))")
     do
@@ -75,7 +75,8 @@ echo ""
 echo ""
 sleep 1
 
-sudo ifup bnep0
+sudo busybox udhcpc -i bnep0 -f -q
+#sudo ifup bnep0
 
 # (sleep 2; sudo ifup bnep0) &
 # journalctl -n 0 -f /sbin/dhclient
