@@ -1,3 +1,3 @@
 #!/bin/sh
-rm -r ~/.config/fcitx/rime/build/
+rm -rf ~/.config/fcitx/rime/build/
 fcitx-remote -r
