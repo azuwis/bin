@@ -1,0 +1,17 @@
+#!/bin/sh
+path="$(while read -r _ path _
+do
+    case "$path" in
+        /media/$USER/*)
+            echo "$path"
+        ;;
+    esac
+done < /proc/mounts | dmenu -p umount)"
+
+case "$path" in
+    "/media/$USER/sshfs")
+        fusermount -u "$path"
+        ;;
+    "/media/$USER/*")
+        udevil umount "$path"
+esac
