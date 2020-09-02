@@ -14,4 +14,10 @@ case "$path" in
         ;;
     "/media/$USER/*")
         udevil umount "$path"
+        ;;
 esac
+
+if [ $? -gt 0 ]
+then
+  notify-send 'Umount failed' "$path"
+fi
