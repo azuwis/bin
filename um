@@ -12,7 +12,7 @@ case "$path" in
     "/media/$USER/sshfs")
         fusermount -u "$path"
         ;;
-    "/media/$USER/*")
+    *)
         udevil umount "$path"
         ;;
 esac
