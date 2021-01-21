@@ -19,7 +19,7 @@ esac
 
 if [ $? -gt 0 ]
 then
-  notify-send 'Umount failed' "$path"
+  notify-send -u critical -t 5000 'Umount failed' "$path"
 else
   notify-send 'Umount successed' "$path"
 fi
